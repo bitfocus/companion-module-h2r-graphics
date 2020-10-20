@@ -1,25 +1,25 @@
 {
-	"name": "h2r-graphics",
-	"version": "1.1.0",
-	"api_version": "1.0.0",
-	"keywords": [
-		"Graphics"
-	],
-	"manufacturer": "Here To Record",
-	"product": "H2R Graphics",
-	"shortname": "h2r-graphics",
-	"main": "index.js",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/bitfocus/companion-module-h2r-graphics.git"
-	},
-	"author": "Joseph Adams <josephdadams@gmail.com>",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/bitfocus/companion-module-h2r-graphics/issues"
-	},
-	"homepage": "https://github.com/bitfocus/companion-module-h2r-graphics#readme"
+ "name": "h2r-graphics",
+ "version": "1.1.0",
+ "api_version": "1.0.0",
+ "keywords": [
+  "Graphics"
+ ],
+ "manufacturer": "Here To Record",
+ "product": "H2R Graphics",
+ "shortname": "h2r-graphics",
+ "main": "index.js",
+ "scripts": {
+  "test": "echo \"Error: no test specified\" && exit 1"
+ },
+ "repository": {
+  "type": "git",
+  "url": "git+https://github.com/bitfocus/companion-module-h2r-graphics.git"
+ },
+ "author": "Joseph Adams <josephdadams@gmail.com>",
+ "license": "MIT",
+ "bugs": {
+  "url": "https://github.com/bitfocus/companion-module-h2r-graphics/issues"
+ },
+ "homepage": "https://github.com/bitfocus/companion-module-h2r-graphics#readme"
 }
