@@ -1,12 +1,12 @@
 {
 	"name": "h2r-graphics",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"api_version": "1.0.0",
 	"keywords": [
 		"Graphics"
 	],
 	"manufacturer": "Here To Record",
-	"product": "Graphics",
+	"product": "H2R Graphics",
 	"shortname": "h2r-graphics",
 	"main": "index.js",
 	"scripts": {
