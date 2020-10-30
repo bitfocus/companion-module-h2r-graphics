@@ -1,3 +1,4 @@
+const { TouchBarLabel } = require("electron");
 var instance_skel = require("../../instance_skel");
 var debug;
 var log;
@@ -10,17 +11,33 @@ function instance(system, id, config) {
 
 	self.actions(); // export actions
 
-	// Example: When this script was committed, a fix needed to be made
-	// this will only be run if you had an instance of an older "version" before.
-	// "version" is calculated out from how many upgradescripts your intance config has run.
-	// So just add a addUpgradeScript when you commit a breaking change to the config, that fixes
-	// the config.
+	// Move from hypen-case to camelCase
+	self.addUpgradeScript(function (config, actions) {
+		var changed = false;
 
-	self.addUpgradeScript(function () {
-		// just an example
-		if (self.config.host !== undefined) {
-			self.config.old_host = self.config.host;
+		for (var k in actions) {
+			var action = actions[k];
+
+			if (action.action == "lowerthirds-show") {
+				action.action = "lowerthirdsShow";
+				action.label = action.id + ":" + action.action;
+				changed = true;
+			} else if (action.action == "lowerthirds-hide") {
+				action.action = "lowerthirdsHide";
+				action.label = action.id + ":" + action.action;
+				changed = true;
+			} else if (action.action == "timer-customup") {
+				action.action = "timerCustomUp";
+				action.label = action.id + ":" + action.action;
+				changed = true;
+			} else if (action.action == "timer-customdown") {
+				action.action = "timerCustomDown";
+				action.label = action.id + ":" + action.action;
+				changed = true;
+			}
 		}
+
+		return changed;
 	});
 
 	return self;
@@ -91,8 +108,8 @@ instance.prototype.actions = function (system) {
 		clearall: {
 			label: "Clear All Graphics",
 		},
-		"lowerthirds-show": {
-			label: "Lower Thirds - Show",
+		lowerthirdsShow: {
+			label: "Lower Third - Show",
 			options: [
 				{
 					type: "textinput",
@@ -104,7 +121,7 @@ instance.prototype.actions = function (system) {
 				},
 			],
 		},
-		"lowerthirds-hide": {
+		t: {
 			label: "Lower Thirds - Hide",
 		},
 		ticker: {
@@ -131,7 +148,7 @@ instance.prototype.actions = function (system) {
 				},
 			],
 		},
-		"timer-customup": {
+		timerCustomUp: {
 			label: "Timer - Custom UP",
 			options: [
 				{
@@ -143,7 +160,7 @@ instance.prototype.actions = function (system) {
 				},
 			],
 		},
-		"timer-customdown": {
+		timerCustomDown: {
 			label: "Timer - Custom DOWN",
 			options: [
 				{
@@ -155,7 +172,7 @@ instance.prototype.actions = function (system) {
 				},
 			],
 		},
-		"timer-custom-down-time-of-day": {
+		timerCustomDownTimeOfDay: {
 			label: "Timer - Custom Down to Time of Day",
 			options: [
 				{
@@ -167,13 +184,13 @@ instance.prototype.actions = function (system) {
 				},
 			],
 		},
-		"timer-current-time": {
+		timerCurrentTime: {
 			label: "Timer - Current Time of Day",
 		},
 		stopwatch: {
 			label: "Stopwatch",
 		},
-		"timer-pause-resume": {
+		timerPauseResume: {
 			label: "Timer - Pause/Resume",
 			options: [
 				{
@@ -185,7 +202,7 @@ instance.prototype.actions = function (system) {
 				},
 			],
 		},
-		"timer-pre-message": {
+		timerPreMessage: {
 			label: "Timer - Set pre-timer custom message",
 			options: [
 				{
@@ -221,7 +238,7 @@ instance.prototype.actions = function (system) {
 				},
 			],
 		},
-		"message-custom": {
+		messageCustom: {
 			label: "Message - Set a custom message",
 			options: [
 				{
@@ -245,10 +262,10 @@ instance.prototype.actions = function (system) {
 				},
 			],
 		},
-		"chat-hide": {
+		chatHide: {
 			label: "Chat - Hide",
 		},
-		"image-next-previous-hide": {
+		imageNextPreviousHide: {
 			label: "Image - Next/Previous/Hide",
 			options: [
 				{
@@ -260,7 +277,7 @@ instance.prototype.actions = function (system) {
 				},
 			],
 		},
-		"image-specific": {
+		imageSpecific: {
 			label: "Image - Show Specific",
 			options: [
 				{
@@ -284,7 +301,7 @@ instance.prototype.actions = function (system) {
 				},
 			],
 		},
-		"score-increase-decrease": {
+		scoreIncreaseDecrease: {
 			label: "Score - Increase/Decrease score for specific team",
 			options: [
 				{
@@ -320,7 +337,7 @@ instance.prototype.action = function (action) {
 			path = oscPrefix + "clear";
 			bol = [];
 			break;
-		case "lowerthirds-show":
+		case "lowerthirdsShow":
 			path = oscPrefix + "lower-third";
 			bol = [
 				{
@@ -329,7 +346,7 @@ instance.prototype.action = function (action) {
 				},
 			];
 			break;
-		case "lowerthirds-hide":
+		case "lowerthirdsHide":
 			path = oscPrefix + "lower-third";
 			bol = [
 				{
@@ -356,7 +373,7 @@ instance.prototype.action = function (action) {
 				},
 			];
 			break;
-		case "timer-customup":
+		case "timerCustomUp":
 			path = oscPrefix + "timer-custom-up";
 			bol = [
 				{
@@ -365,7 +382,7 @@ instance.prototype.action = function (action) {
 				},
 			];
 			break;
-		case "timer-customdown":
+		case "timerCustomDown":
 			path = oscPrefix + "timer-custom-down";
 			bol = [
 				{
@@ -374,7 +391,7 @@ instance.prototype.action = function (action) {
 				},
 			];
 			break;
-		case "timer-custom-down-time-of-day":
+		case "timerCustomDownTimeOfDay":
 			path = oscPrefix + "timer-custom-down-time-of-day";
 			bol = [
 				{
@@ -383,7 +400,7 @@ instance.prototype.action = function (action) {
 				},
 			];
 			break;
-		case "timer-current-time":
+		case "timerCurrentTime":
 			path = oscPrefix + "timer-current-time";
 			bol = [];
 			break;
@@ -391,7 +408,7 @@ instance.prototype.action = function (action) {
 			path = oscPrefix + "stopwatch";
 			bol = [];
 			break;
-		case "timer-pause-resume":
+		case "timerPauseResume":
 			path = oscPrefix + "timer";
 			bol = [
 				{
@@ -400,7 +417,7 @@ instance.prototype.action = function (action) {
 				},
 			];
 			break;
-		case "timer-pre-message":
+		case "timerPreMessage":
 			path = oscPrefix + "timer-pre-message";
 			bol = [
 				{
@@ -427,7 +444,7 @@ instance.prototype.action = function (action) {
 				},
 			];
 			break;
-		case "message-custom":
+		case "messageCustom":
 			path = oscPrefix + "message";
 			bol = [
 				{
@@ -445,7 +462,7 @@ instance.prototype.action = function (action) {
 				},
 			];
 			break;
-		case "chat-hide":
+		case "chatHide":
 			path = oscPrefix + "chat";
 			bol = [
 				{
@@ -454,7 +471,7 @@ instance.prototype.action = function (action) {
 				},
 			];
 			break;
-		case "image-next-previous-hide":
+		case "imageNextPreviousHide":
 			path = oscPrefix + "image";
 			bol = [
 				{
@@ -463,7 +480,7 @@ instance.prototype.action = function (action) {
 				},
 			];
 			break;
-		case "image-specific":
+		case "imageSpecific":
 			path = oscPrefix + "image";
 			bol = [
 				{
@@ -481,7 +498,7 @@ instance.prototype.action = function (action) {
 				},
 			];
 			break;
-		case "score-increase-decrease":
+		case "scoreIncreaseDecrease":
 			path = oscPrefix + "score-team-" + action.options.team;
 			bol = [
 				{
