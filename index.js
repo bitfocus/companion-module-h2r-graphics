@@ -121,7 +121,7 @@ instance.prototype.actions = function (system) {
 				},
 			],
 		},
-		t: {
+		lowerthirdsHide: {
 			label: "Lower Thirds - Hide",
 		},
 		ticker: {
