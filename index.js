@@ -1,7 +1,6 @@
 const { TouchBarLabel } = require("electron");
 var instance_skel = require("../../instance_skel");
-var debug;
-var log;
+var upgradeScripts = require('./upgrades')
 
 function instance(system, id, config) {
 	var self = this;
@@ -11,36 +10,11 @@ function instance(system, id, config) {
 
 	self.actions(); // export actions
 
-	// Move from hypen-case to camelCase
-	self.addUpgradeScript(function (config, actions) {
-		var changed = false;
-
-		for (var k in actions) {
-			var action = actions[k];
-
-			if (action.action == "lowerthirds-show") {
-				action.action = "lowerthirdsShow";
-				action.label = action.id + ":" + action.action;
-				changed = true;
-			} else if (action.action == "lowerthirds-hide") {
-				action.action = "lowerthirdsHide";
-				action.label = action.id + ":" + action.action;
-				changed = true;
-			} else if (action.action == "timer-customup") {
-				action.action = "timerCustomUp";
-				action.label = action.id + ":" + action.action;
-				changed = true;
-			} else if (action.action == "timer-customdown") {
-				action.action = "timerCustomDown";
-				action.label = action.id + ":" + action.action;
-				changed = true;
-			}
-		}
-
-		return changed;
-	});
-
 	return self;
+}
+
+instance.GetUpgradeScripts = function() {
+	return upgradeScripts
 }
 
 instance.prototype.CHOICES_showhide = [
@@ -68,9 +42,6 @@ instance.prototype.init = function () {
 	var self = this;
 
 	self.status(self.STATE_OK);
-
-	debug = self.debug;
-	log = self.log;
 };
 
 // Return config fields for web config
@@ -99,7 +70,7 @@ instance.prototype.config_fields = function () {
 // When module gets deleted
 instance.prototype.destroy = function () {
 	var self = this;
-	debug("destroy");
+	self.debug("destroy");
 };
 
 instance.prototype.actions = function (system) {
@@ -325,7 +296,7 @@ instance.prototype.actions = function (system) {
 instance.prototype.action = function (action) {
 	var self = this;
 
-	debug("action: ", action);
+	self.debug("action: ", action);
 
 	let oscPrefix = "/h2r-graphics/";
 
@@ -512,7 +483,7 @@ instance.prototype.action = function (action) {
 	}
 
 	if (path !== null) {
-		debug("sending", self.config.host, self.config.port, path);
+		self.debug("sending", self.config.host, self.config.port, path);
 		self.system.emit("osc_send", self.config.host, self.config.port, path, bol);
 	}
 };
