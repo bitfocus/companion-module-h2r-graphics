@@ -1,4 +1,17 @@
-## H2R Graphics
+## H2R Graphics v2
+
+Use this module to send commands to H2R Graphics. Be sure to check your IP address, Port and Project ID all from the H2R Graphics launcher.
+
+**Available commands**
+
+- Run
+- Hide all
+- Show/Hide graphics
+- Update contents of graphics
+- Change Position, Offset and scale
+- Set custom themes to each graphic
+
+## H2R Graphics v1
 
 Use this module to send OSC messages to your H2R Graphics software. By default, the OSC listening port of the software is 8181.
 

@@ -1,13 +1,14 @@
 {
 	"name": "h2r-graphics",
-	"version": "1.1.3",
-	"api_version": "1.0.0",
+	"version": "2.0.0",
+	"api_version": "2.0.0",
 	"keywords": [
 		"Graphics"
 	],
-	"manufacturer": "Here To Record",
+	"manufacturer": "Here to Record",
 	"product": "H2R Graphics",
 	"shortname": "h2r-graphics",
+	"description": "Live production graphics just got easier",
 	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
@@ -17,9 +18,15 @@
 		"url": "git+https://github.com/bitfocus/companion-module-h2r-graphics.git"
 	},
 	"author": "Joseph Adams <josephdadams@gmail.com>",
+	"contributors": [
+		"John Barker <john@heretorecord.com>"
+	],
 	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/bitfocus/companion-module-h2r-graphics/issues"
 	},
-	"homepage": "https://github.com/bitfocus/companion-module-h2r-graphics#readme"
+	"homepage": "https://github.com/bitfocus/companion-module-h2r-graphics#readme",
+	"dependencies": {
+		"socket.io-client": "^4.4.0"
+	}
 }
