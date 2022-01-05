@@ -1,4 +1,4 @@
-const { graphicToReadableLabel, graphicColours } = require('./utils')
+const { graphicToReadableLabel, graphicColours, graphicIcons } = require('./utils')
 
 exports.initPresets = function () {
 	const presets = []
@@ -40,12 +40,15 @@ exports.initPresets = function () {
 
 	const createPresetShowHide = (category, item) => {
 		let bgColour = graphicColours(item.type).bgColour
+		let pngIcon = graphicIcons(item.type).png
 		return {
 			category,
 			label: graphicToReadableLabel(item).label,
 			bank: {
 				style: 'text',
 				text: `$(${this.config.label}:graphic_${item.id}_contents)`,
+				png64: pngIcon,
+				pngalignment: 'center:center',
 				size: '18',
 				color: this.rgb(255, 255, 255),
 				bgcolor: this.rgb(bgColour[0], bgColour[1], bgColour[2]),
