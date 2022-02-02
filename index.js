@@ -111,9 +111,9 @@ instance.prototype.destroy = function () {
 
 instance.prototype.actions = function () {
 	if (this.config.useV2 === true) {
-		this.system.emit('instance_actions', this.id, getActionsV2.bind(this)())
+		this.setActions(getActionsV2.bind(this)())
 	} else {
-		this.system.emit('instance_actions', this.id, getActionsV1.bind(this)())
+		this.setActions(getActionsV1.bind(this)())
 	}
 }
 

@@ -1148,7 +1148,7 @@ exports.executeActionV1 = function (action) {
 
 	if (path !== null) {
 		self.log('info', `${self.config.host}:${self.config.port}${path}, ${JSON.stringify(bol)}`)
-		self.system.emit('osc_send', self.config.host, self.config.port, path, bol)
+		self.oscSend(self.config.host, self.config.port, path, bol)
 	}
 }
 
