@@ -1,8 +1,11 @@
 const { graphicToReadableLabel, graphicColours, graphicIcons } = require('./utils')
 
-exports.initPresets = function () {
-	const presets = []
-	let SELECTED_PROJECT_GRAPHICS = this.SELECTED_PROJECT_GRAPHICS || []
+exports.setPresets = function () {
+	let self = this;
+
+	let presets = []
+
+	let SELECTED_PROJECT_GRAPHICS = self.SELECTED_PROJECT_GRAPHICS || []
 
 	presets.push({
 		category: 'Basic actions',
@@ -11,12 +14,12 @@ exports.initPresets = function () {
 			style: 'text',
 			text: 'Run',
 			size: '18',
-			color: this.rgb(255, 255, 255),
-			bgcolor: this.rgb(0, 0, 0),
+			color: self.rgb(255, 255, 255),
+			bgcolor: self.rgb(0, 0, 0),
 		},
 		actions: [
 			{
-				action: 'run',
+				action: 'run'
 			},
 		],
 	})
@@ -28,12 +31,12 @@ exports.initPresets = function () {
 			style: 'text',
 			text: 'Hide all',
 			size: '18',
-			color: this.rgb(255, 255, 255),
-			bgcolor: this.rgb(0, 0, 0),
+			color: self.rgb(255, 255, 255),
+			bgcolor: self.rgb(0, 0, 0),
 		},
 		actions: [
 			{
-				action: 'clear',
+				action: 'clear'
 			},
 		],
 	})
@@ -46,12 +49,12 @@ exports.initPresets = function () {
 			label: graphicToReadableLabel(item).label,
 			bank: {
 				style: 'text',
-				text: `$(${this.config.label}:graphic_${item.id}_contents)`,
+				text: `$(${self.config.label}:graphic_${item.id}_contents)`,
 				png64: pngIcon,
 				pngalignment: 'center:center',
 				size: '18',
-				color: this.rgb(255, 255, 255),
-				bgcolor: this.rgb(bgColour[0], bgColour[1], bgColour[2]),
+				color: self.rgb(255, 255, 255),
+				bgcolor: self.rgb(bgColour[0], bgColour[1], bgColour[2]),
 				latch: true,
 			},
 			actions: [{ action: 'showHide', options: { graphicId: item.id, status: 'coming' } }],
@@ -62,10 +65,10 @@ exports.initPresets = function () {
 					options: {
 						graphicId: item.id,
 						status: 'coming',
-						fg: this.rgb(0, 0, 0),
+						fg: self.rgb(0, 0, 0),
 					},
 					style: {
-						bgcolor: this.rgb(132, 0, 0),
+						bgcolor: selfß.rgb(132, 0, 0),
 					},
 				},
 				{
@@ -73,10 +76,10 @@ exports.initPresets = function () {
 					options: {
 						graphicId: item.id,
 						status: 'onair',
-						fg: this.rgb(0, 0, 0),
+						fg: self.rgb(0, 0, 0),
 					},
 					style: {
-						bgcolor: this.rgb(255, 0, 0),
+						bgcolor: self.rgb(255, 0, 0),
 					},
 				},
 				{
@@ -84,10 +87,10 @@ exports.initPresets = function () {
 					options: {
 						graphicId: item.id,
 						status: 'going',
-						fg: this.rgb(0, 0, 0),
+						fg: selfß.rgb(0, 0, 0),
 					},
 					style: {
-						bgcolor: this.rgb(132, 0, 0),
+						bgcolor: self.rgb(132, 0, 0),
 					},
 				},
 			],
@@ -101,9 +104,5 @@ exports.initPresets = function () {
 		presets.push(preset)
 	})
 
-	if (this.config.useV2 === true) {
-		this.setPresetDefinitions(presets)
-	} else {
-		this.setPresetDefinitions([])
-	}
+	return presets;
 }

@@ -1,28 +1,30 @@
 const { graphicToReadableLabel } = require('./utils')
 
-exports.updateVariableDefinitions = function () {
-	const variables = []
+module.exports = {
+	setVariables: function() {
+		let self = this;
 
-	let SELECTED_PROJECT_GRAPHICS = this.SELECTED_PROJECT_GRAPHICS || []
+		let variables = []
 
-	// Add variable for instance Status an other status info
-	variables.push({
-		label: `Connected to H2R Graphics`,
-		name: `connected_state`,
-	})
-
-	SELECTED_PROJECT_GRAPHICS.forEach((g) => {
-		if (g.type === 'section') return null
-
-		return variables.push({
-			label: graphicToReadableLabel(g).label,
-			name: `graphic_${g.id}_contents`,
+		// Add variable for instance Status and other status info
+		variables.push({
+			label: `Connected to H2R Graphics`,
+			name: `connected_state`,
 		})
-	})
 
-	if (this.config.useV2 === true) {
-		this.setVariableDefinitions(variables)
-	} else {
-		this.setVariableDefinitions([])
+		if (self.config.useV2) {
+			let SELECTED_PROJECT_GRAPHICS = self.SELECTED_PROJECT_GRAPHICS || []
+
+			SELECTED_PROJECT_GRAPHICS.forEach((g) => {
+				if (g.type === 'section') return null
+	
+				variables.push({
+					label: graphicToReadableLabel(g).label,
+					name: `graphic_${g.id}_contents`,
+				})
+			})
+		}
+
+		return variables;
 	}
 }

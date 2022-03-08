@@ -1,9 +1,9 @@
-exports.getConfigFields = function () {
+exports.setConfigFields = function () {
 	configValues = this
 	return [
 		{
 			type: 'text',
-			id: 'useV2Info',
+			id: 'versionInfo',
 			width: 12,
 			label: 'Heads up',
 			value: 'You may need to replace existing actions when switching between versions!',
@@ -11,7 +11,7 @@ exports.getConfigFields = function () {
 		{
 			type: 'checkbox',
 			id: 'useV2',
-			label: 'Vers.2',
+			label: 'Version 2 or greater',
 			width: 1,
 			default: true,
 		},
@@ -55,6 +55,6 @@ exports.getConfigFields = function () {
 			width: 3,
 			default: 'ABCD',
 			isVisible: (configValues) => configValues.useV2 === true,
-		},
+		}
 	]
 }
