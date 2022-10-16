@@ -46,6 +46,7 @@ instance.prototype.CHOICES_image = [
 instance.prototype.GRAPHIC_STATUS_TOGGLES = [
 	{ id: 'coming', label: 'Show' },
 	{ id: 'going', label: 'Hide' },
+	{ id: 'toggle', label: 'Toggle' },
 	{ id: 'cued', label: 'Cue on' },
 	{ id: 'cuedoff', label: 'Cue off' },
 ]

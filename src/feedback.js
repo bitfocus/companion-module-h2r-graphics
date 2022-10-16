@@ -40,7 +40,7 @@ exports.initFeedbacks = function () {
 			},
 		],
 		callback: function (feedback) {
-			let status = self.SELECTED_PROJECT_GRAPHICS.find((g) => g.id === feedback.options.graphicId).status
+			let status = self.SELECTED_PROJECT_GRAPHICS.find((g) => g.id === feedback?.options?.graphicId)?.status
 			// This callback will be called whenever companion wants to check if this feedback is 'active' and should affect the button style
 			if (status === feedback.options.status) {
 				return true

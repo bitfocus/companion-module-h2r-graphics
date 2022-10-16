@@ -24,16 +24,14 @@ exports.init = function () {
 
 		socket.on('error', function (err) {
 			self.status(self.STATUS_ERROR, err)
-			self.socket.destroy()
 			self.setVariable(`connected_state`, 'False')
 
 			// socket.emit('companion')
 			console.log('error', err)
 		})
 
-		socket.on('disconnected', function () {
+		socket.on('disconnect', function () {
 			self.status(self.STATUS_ERROR)
-			self.socket.destroy()
 			self.setVariable(`connected_state`, 'False')
 		})
 

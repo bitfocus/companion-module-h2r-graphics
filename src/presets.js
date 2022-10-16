@@ -52,10 +52,9 @@ exports.initPresets = function () {
 				size: '18',
 				color: this.rgb(255, 255, 255),
 				bgcolor: this.rgb(bgColour[0], bgColour[1], bgColour[2]),
-				latch: true,
+				latch: false,
 			},
-			actions: [{ action: 'showHide', options: { graphicId: item.id, status: 'coming' } }],
-			release_actions: [{ action: 'showHide', options: { graphicId: item.id, status: 'going' } }],
+			actions: [{ action: 'showHide', options: { graphicId: item.id, status: 'toggle' } }],
 			feedbacks: [
 				{
 					type: 'graphic_status',

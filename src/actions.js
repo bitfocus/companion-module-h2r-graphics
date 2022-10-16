@@ -276,19 +276,19 @@ exports.getActionsV2 = function () {
 					],
 				},
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Line one',
 					id: 'line_one',
 				},
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Line two',
 					id: 'line_two',
 				},
 			],
 		},
 		updateContentLowerThirdAnimated: {
-			label: 'Update content - Two Line',
+			label: 'Update content - Lower Third Animated',
 			options: [
 				{
 					type: 'dropdown',
@@ -332,12 +332,12 @@ exports.getActionsV2 = function () {
 					default: true,
 				},
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Line one',
 					id: 'line_one',
 				},
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Line two',
 					id: 'line_two',
 				},
@@ -362,7 +362,7 @@ exports.getActionsV2 = function () {
 					],
 				},
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Message body',
 					id: 'body',
 				},
@@ -499,7 +499,7 @@ exports.getActionsV2 = function () {
 					],
 				},
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Name',
 					id: 'imageName',
 				},
@@ -537,7 +537,7 @@ exports.getActionsV2 = function () {
 					],
 				},
 				{
-					type: 'textinput',
+					type: 'textwithvariables',
 					label: 'Title',
 					id: 'title',
 				},
@@ -1183,25 +1183,47 @@ exports.executeActionV2 = function (action) {
 			}
 			break
 		case 'updateContentLowerThird':
+			let lt_line_one
+			let lt_line_two
+			self.system.emit('variable_parse', action.options.line_one, function (value) {
+				lt_line_one = value
+			})
+			self.system.emit('variable_parse', action.options.line_two, function (value) {
+				lt_line_two = value
+			})
+
 			cmd = `graphic/${action.options.graphicId}/update`
 			body = {
-				line_one: action.options.line_one,
-				line_two: action.options.line_two,
+				line_one: lt_line_one,
+				line_two: lt_line_two,
 			}
 			break
 		case 'updateContentLowerThirdAnimated':
+			let lt_animated_line_one
+			let lt_animated_line_two
+			self.system.emit('variable_parse', action.options.line_one, function (value) {
+				lt_animated_line_one = value
+			})
+			self.system.emit('variable_parse', action.options.line_two, function (value) {
+				lt_animated_line_two = value
+			})
+
 			cmd = `graphic/${action.options.graphicId}/update`
 			body = {
 				animationName: action.options.animationName,
 				twoLines: action.options.twoLines,
-				line_one: action.options.line_one,
-				line_two: action.options.line_two,
+				line_one: lt_animated_line_one,
+				line_two: lt_animated_line_two,
 			}
 			break
 		case 'updateContentMessage':
+			let message_body
+			self.system.emit('variable_parse', action.options.body, function (value) {
+				message_body = value
+			})
 			cmd = `graphic/${action.options.graphicId}/update`
 			body = {
-				body: action.options.body,
+				body: message_body,
 			}
 			break
 		case 'updateContentTime':
@@ -1221,12 +1243,14 @@ exports.executeActionV2 = function (action) {
 				body = {
 					timerType: action.options.type,
 					duration: action.options.time,
+					durationMS: stringToMS(action.options.time),
 					timeLeft: stringToMS(action.options.time),
 				}
 			} else if (action.options.type === 'countup') {
 				body = {
 					timerType: action.options.type,
 					duration: action.options.time,
+					durationMS: stringToMS(action.options.time),
 					timeLeft: 0,
 				}
 			}
@@ -1238,6 +1262,7 @@ exports.executeActionV2 = function (action) {
 					shape: action.options.shape,
 					timerType: action.options.type,
 					duration: action.options.time,
+					durationMS: stringToMS(action.options.time),
 					timeLeft: stringToMS(action.options.time),
 				}
 			} else if (action.options.type === 'countup') {
@@ -1245,21 +1270,30 @@ exports.executeActionV2 = function (action) {
 					shape: action.options.shape,
 					timerType: action.options.type,
 					duration: action.options.time,
+					durationMS: stringToMS(action.options.time),
 					timeLeft: 0,
 				}
 			}
 			break
 		case 'updateContentImage':
+			let image_name
+			self.system.emit('variable_parse', action.options.imageName, function (value) {
+				image_name = value
+			})
 			cmd = `graphic/${action.options.graphicId}/update`
 			body = {
-				name: action.options.imageName,
-				url: `http://${self.config.host}:${self.config.portV2}/media/${action.options.imageFilename}`,
+				name: image_name,
+				filename: `${action.options.imageFilename}`,
 			}
 			break
 		case 'updateContentTicker':
+			let ticker_title
+			self.system.emit('variable_parse', action.options.title, function (value) {
+				ticker_title = value
+			})
 			cmd = `graphic/${action.options.graphicId}/update`
 			body = {
-				title: action.options.title,
+				title: ticker_title,
 				items: action.options.items.split('|').map((item, i) => {
 					return {
 						title: `Item ${i + 1}`,

@@ -67,6 +67,9 @@ const graphicToReadableLabel = (graphic) => {
 	} else if (graphic.type === 'image') {
 		label = `${graphic.name} (Image - ${graphic.id})`
 		contents = `${graphic.name}`
+	} else if (graphic.type === 'image_with_message') {
+		label = `${graphic.body} (Image with Mesage - ${graphic.id})`
+		contents = `${graphic.body}`
 	} else if (graphic.type === 'ticker') {
 		label = `${graphic.title} (Ticker - ${graphic.id})`
 		contents = `${graphic.title}`
@@ -99,6 +102,15 @@ const graphicToReadableLabel = (graphic) => {
 	} else if (graphic.type === 'credits') {
 		label = `${graphic.lead} (Credits - ${graphic.id})`
 		contents = `${graphic.lead}`
+	} else if (graphic.type === 'animated_background') {
+		label = `${graphic.animationName} (Animated Background - ${graphic.id})`
+		contents = `${graphic.animationName}`
+	} else if (graphic.type === 'video') {
+		label = `${graphic.name} (Video - ${graphic.id})`
+		contents = `${graphic.name}`
+	} else if (graphic.type === 'celebration') {
+		label = `${graphic.celebrationType} (Celebration - ${graphic.id})`
+		contents = `${graphic.celebrationType}`
 	} else {
 		label = `${graphic.type} (${graphic.id})`
 		contents = `${graphic.type} (${graphic.id})`
@@ -163,6 +175,22 @@ const graphicColours = (graphic) => {
 			bgColour = [34, 197, 94]
 			break
 
+		case 'video':
+			bgColour = [80, 74, 226]
+			break
+
+		case 'image_with_message':
+			bgColour = [150, 103, 28]
+			break
+
+		case 'animated_background':
+			bgColour = [67, 102, 232]
+			break
+
+		case 'celebration':
+			bgColour = [111, 41, 203]
+			break
+
 		default:
 			bgColour = [0, 0, 0]
 			break
@@ -220,6 +248,22 @@ const graphicIcons = (graphic) => {
 
 		case 'credits':
 			png = `iVBORw0KGgoAAAANSUhEUgAAAEgAAAA6CAYAAAATBx+NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAF3SURBVHgB7dXtTcMwEMbxK+I7HaFMQDYgnYAyAWEENigTtEwAnQCYoGEC2CBlgnaD8FxzEVYEiA+WKNL/J50cO2cnfmlqBuA/adt2plgrGsW9YhxtTYTfKxWTpK3PLQd51WDM2aBPE23F8Jl2iGLSbp5M1q+ruPaJLBXbJLeK3CLKNsoq8sqk/yTqT4o6rn0DXhWLZKEqy+TY8pop6tFoNPeKXnSqwnez8Lra33yigz4nioli0zcor47+pYorxUu0e84mFmCb5O3i2e+K68jL4sjyGkfs+Yv6okTVd3+rcqm4TfqUinPrFmloZ7+gZ0xjTB9n/7OzTHIvUK0o4qj70X/0b0Lc2yhOrZt0OvEbTdB3/SEdyMdQcWFxen7iPzEfX2Ncqny2btGzyLpAceR9J/2F/bSMLTktuu8Lc6dY2OdJa+K7s+7zvKLC66vhwn1j5fnR78y6U3rY/uKfxD/iBgAAAAAAAAAAAAAAAAAAAAAAAADAFz4Ai4lYrXh4sfgAAAAASUVORK5CYII=`
+			break
+
+		case 'image_with_message':
+			png = `iVBORw0KGgoAAAANSUhEUgAAAEgAAAA6CAYAAAATBx+NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAH+SURBVHgB7ZTtUcMwDIZdjv9kA8IG3YAwAWUCsgHZgDIBYYKWCcoGYQO6QcoELRMYKX1NhZq7thz0+PE+dzo7sqwv2wmBEHJsYoytyFDkReTN6HOsVfi+FWnURuTxAP8F/JRG9whdDp9tEhOrRax7k0+ynYhkLs+Z8Z+J1NDrniH0W7H2KSCiiCbNoZ/ie4wk0jwVPO7x9ZWMa5DSGF0LXSquhl1hcqpwcG8Y1ffMHGY6uFJkiT2ZyX0uMkLOSzRtK5blNOxmIaIn9ipyiVEpdT4YDLpmyfxKZGUKVl0hos3RhF/E9tX5HiKpvCfuGfQLk8ctYtyIr4Xs/YB/9VGpDrZq9yByhzxr6DTHOWQq9ivxYWOtfBInYTdPKKRCku9m7QOjrultmJm1PKwbqpyjiD7fd5Bnt3aB/WnfFeyvRbobJAWOwroR2qQWNyfHHi12Dvvg8prAvnCxLsM+uCdW4gpGzKfmWS3xJDJc9brHV+uvrnliGcY2bp5semKlsc+NTYa4Izy1Ajb6xCbIscV8ZuI0Ef9JF/9brJ82qPvHYK1rEObjuKHB6XlfXVF9DcK8QTG+QV/Arvax4vqftHRN1qbV7oAq51f3VGbdkoffxjfgL+mLdUhRx8yVEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEELI/+ETmK8GbNsEzmMAAAAASUVORK5CYII=`
+			break
+
+		case 'video':
+			png = `iVBORw0KGgoAAAANSUhEUgAAAEgAAAA6CAYAAAATBx+NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAD0SURBVHgB7dRhDcIwEIbhBgVIqAQcMAmTMAdIwAIOwAE4GA6QUAngoNyFr6SUwL/92PI+yWXrUZrcpbcQAMxVznljkSzWWndal3y0GPXuz2O1N1UxKtfuj2HOvFiLu8Wg9akUll+iij2oebeqGW5QfqNcvdfPSmHuVFApOqnotkGDfu89qXe3q5rUKVdu2PuMMKFVmN7Fwkeqt2e0uP7Z+2jWncVW/3v82LsOc6cx85ty0frrBmkcz82IxeqMMq57rfeLGDGnMcvVKLUNKsbSlPwpKddX+1P5NqEx9XcHAAAAAAAAAAAAAAAAAAAAAAAAALA8T7fEe56O0g6nAAAAAElFTkSuQmCC`
+			break
+
+		case 'celebration':
+			png = `iVBORw0KGgoAAAANSUhEUgAAAEgAAAA6CAYAAAATBx+NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAHwSURBVHgB7ZXhUcJAEIUXx//agbEC6cBYgXQgdoAVECtQK0ArECsgVABUQKxArAD3yTvZYZwkzuioM++beXNkb/Nu77IJZkKI32a9XvdcE9fMdRNiy6ABNdq5N+bAIwvX8BsybxxiI9dh8EBswt+DHU+oS+8uc4bBqx/qnSVfrtdr2vt+UwI25MOj69pVulD8q4+Va+W6Yiqu+65sxyJjzpz5KXbGEX4PPh647piH9Z5dBTeBTeEQch/HzMGDWrjuuTa8Dnkgfa6J+248ViUP15BzB4zV0nhAXKzsdDoFLnyxM8ZzLpDxel7jgZyVbQ8VnDAO78p9jXNz5qXicUAlc3PWgfx3P78uWVda68L14PEx4zljU3r3PfZkLdlrmfdx0tgMFOZOqazm/iPm5CF2DDvcxy4F6Iol17vl63Bum06pbLPRrxK7JHX8yFp0D2hzQKVxEyg4fSM4h8O6pOo66I45RYjdugrbtr6x+PRqYDM9jiecz9gRdaBTzllvxnunadJruLdNJ3WtBY0HxBbGtwFP9oUFX3M6X28pPonljE1SIFgnv7mF1zNsYGB8vdJDsM3Davqw4uAX9Iee6BmBV2XfTfxn+euw2/9NvUIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIX6WN8P9YzuXYAzQAAAAAElFTkSuQmCC`
+			break
+
+		case 'animated_background':
+			png = `iVBORw0KGgoAAAANSUhEUgAAAEgAAAA6CAYAAAATBx+NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAHlSURBVHgB7ZTdUcNADIQVhnfcAe6AUAGmAtwBpgLcAUkFpINABYQKklQQU0FMBaEDoyXrQRgS54EHhtlvZsd3ku6k+/GZCSH+Ak3TrKDQL11PoT935a4JhfbalYWYGeJCv4gxbEdNmSfaymBDTU+utFPrPPgxR0L7bbDf2S9uTubaUBlto2ZLGRaHBT+wqIL+Of0p+2v7uunrEJNx8Q3bQ+ZZsZ9xHtgW7I9YVxLmbTdySF9BbXhw7XqKvrUf2WEUrpnr2ZUHe+W6QyE7xsE/ZPEjV22fi0jhc43bmMFgsOAYQ9tVMRzjU+qNtjVjRuznndxnrozxC7aXHj9jHedc014O3aAL1yuTXQc7+ljglIvoAv+jq+Qc4+CDrWKxGJtbfw1QusP/1uknQe0BbviduHBr762H3g3iL5W6Tl0nwfaBn8iExSU7psAp4X+vLdwg54p9bPiLfd34LrXnuaGqUFuCd4W5q86YZ96uJXPBn/PmFoxZWg/H1k/BZDcsKrXtaccTg2/102D8BngvbHuTjHPgRDHPpftrbvg8viMd8GY0bI9DXVCN/JinM2aKt9C2G1MyT+rt9g3E7/lg4jt7DkIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIcQ/5R2L87OAzMyCPAAAAABJRU5ErkJggg==`
 			break
 
 		default:
