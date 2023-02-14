@@ -27,6 +27,6 @@
 	},
 	"homepage": "https://github.com/bitfocus/companion-module-h2r-graphics#readme",
 	"dependencies": {
-		"socket.io-client": "^4.4.0"
+		"socket.io-client": "^4.6.0"
 	}
 }
