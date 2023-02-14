@@ -1,8 +1,9 @@
-const { graphicToReadableLabel, graphicColours, graphicIcons } = require('./utils')
+const { graphicToReadableLabel, graphicColours, graphicIcons, replaceWithDataSource } = require('./utils')
 
 exports.initPresets = function () {
 	const presets = []
 	let SELECTED_PROJECT_GRAPHICS = this.SELECTED_PROJECT_GRAPHICS || []
+	let SELECTED_PROJECT_VARIABLES = this.SELECTED_PROJECT_VARIABLES || {}
 
 	presets.push({
 		category: 'Basic actions',
@@ -43,7 +44,7 @@ exports.initPresets = function () {
 		let pngIcon = graphicIcons(item.type).png
 		return {
 			category,
-			label: graphicToReadableLabel(item).label,
+			label: replaceWithDataSource(graphicToReadableLabel(item).label, SELECTED_PROJECT_VARIABLES),
 			bank: {
 				style: 'text',
 				text: `$(${this.config.label}:graphic_${item.id}_contents)`,

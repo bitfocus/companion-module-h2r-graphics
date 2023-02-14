@@ -1,6 +1,6 @@
 var io = require('socket.io-client')
 
-const { graphicToReadableLabel } = require('./utils')
+const { graphicToReadableLabel, replaceWithDataSource } = require('./utils')
 const { initPresets } = require('./presets')
 
 let socket = null
@@ -51,11 +51,15 @@ exports.init = function () {
 				self.SELECTED_PROJECT_GRAPHICS = data.projects[self.config.projectId].cues || []
 				self.SELECTED_PROJECT_MEDIA = data.projects[self.config.projectId].media || []
 				self.SELECTED_PROJECT_THEMES = data.projects[self.config.projectId].themes || {}
+				self.SELECTED_PROJECT_VARIABLES = data.projects[self.config.projectId].dynamicText || {}
 
 				data.projects[self.config.projectId].cues.map((c) => {
 					const { id, contents } = graphicToReadableLabel(c)
 
-					self.setVariable(`graphic_${id}_contents`, contents)
+					self.setVariable(`graphic_${id}_contents`, replaceWithDataSource(contents, self.SELECTED_PROJECT_VARIABLES))
+				})
+				Object.entries(data.projects[self.config.projectId].dynamicText).map(([id, val]) => {
+					self.setVariable(id, val)
 				})
 			}
 

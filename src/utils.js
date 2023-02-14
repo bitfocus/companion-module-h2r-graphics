@@ -111,6 +111,18 @@ const graphicToReadableLabel = (graphic) => {
 	} else if (graphic.type === 'celebration') {
 		label = `${graphic.celebrationType} (Celebration - ${graphic.id})`
 		contents = `${graphic.celebrationType}`
+	} else if (graphic.type === 'now_next_then') {
+		label = `${graphic.items[0].sectionTitle} (Now next then - ${graphic.id})`
+		contents = `${graphic.items[0].sectionTitle}`
+	} else if (graphic.type === 'qr') {
+		label = `${graphic.message} (QR code - ${graphic.id})`
+		contents = `${graphic.message}`
+	} else if (graphic.type === 'map') {
+		label = `Map - ${graphic.id}`
+		contents = `Map`
+	} else if (graphic.type === 'checklist') {
+		label = `${graphic.title} (Checklist - ${graphic.id})`
+		contents = `${graphic.title}`
 	} else {
 		label = `${graphic.type} (${graphic.id})`
 		contents = `${graphic.type} (${graphic.id})`
@@ -191,6 +203,22 @@ const graphicColours = (graphic) => {
 			bgColour = [111, 41, 203]
 			break
 
+		case 'now_next_then':
+			bgColour = [50, 87, 68]
+			break
+
+		case 'qr':
+			bgColour = [53, 88, 52]
+			break
+
+		case 'checklist':
+			bgColour = [100, 102, 237]
+			break
+
+		case 'map':
+			bgColour = [45, 60, 135]
+			break
+
 		default:
 			bgColour = [0, 0, 0]
 			break
@@ -266,6 +294,22 @@ const graphicIcons = (graphic) => {
 			png = `iVBORw0KGgoAAAANSUhEUgAAAEgAAAA6CAYAAAATBx+NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAHlSURBVHgB7ZTdUcNADIQVhnfcAe6AUAGmAtwBpgLcAUkFpINABYQKklQQU0FMBaEDoyXrQRgS54EHhtlvZsd3ku6k+/GZCSH+Ak3TrKDQL11PoT935a4JhfbalYWYGeJCv4gxbEdNmSfaymBDTU+utFPrPPgxR0L7bbDf2S9uTubaUBlto2ZLGRaHBT+wqIL+Of0p+2v7uunrEJNx8Q3bQ+ZZsZ9xHtgW7I9YVxLmbTdySF9BbXhw7XqKvrUf2WEUrpnr2ZUHe+W6QyE7xsE/ZPEjV22fi0jhc43bmMFgsOAYQ9tVMRzjU+qNtjVjRuznndxnrozxC7aXHj9jHedc014O3aAL1yuTXQc7+ljglIvoAv+jq+Qc4+CDrWKxGJtbfw1QusP/1uknQe0BbviduHBr762H3g3iL5W6Tl0nwfaBn8iExSU7psAp4X+vLdwg54p9bPiLfd34LrXnuaGqUFuCd4W5q86YZ96uJXPBn/PmFoxZWg/H1k/BZDcsKrXtaccTg2/102D8BngvbHuTjHPgRDHPpftrbvg8viMd8GY0bI9DXVCN/JinM2aKt9C2G1MyT+rt9g3E7/lg4jt7DkIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIcQ/5R2L87OAzMyCPAAAAABJRU5ErkJggg==`
 			break
 
+		case 'now_next_then':
+			png = `iVBORw0KGgoAAAANSUhEUgAAAEgAAAA6CAYAAAATBx+NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIDSURBVHgB7ZXvTeNAEMU3iO+kg3MHlw5wB5er4JIKclSAr4ILFRgqSKggpgLcQUwFmArCPPwGDUuIBEJISO8njXZ3dvx2Zv/IKQkhvoLdbjc1uzUbc7w2+8v+wmzL+XP6arOK/cpsxX7J2PEhXdo2mPtcp6B/ksXB6pD3JpvbcM1NiFnSplnskmvGWOQ39fFx2CMUMDHDBpyZncDH4KXZb7PerDbfg7V3Zr/MKrNTs5KbgPhuNBr1h3Q519MHOo7PTWfG+Gv650HD83D+UW/FuJaxRVbbju2YGr7mjLn/t5zz/F5sUKL4zIKvg69EovbxGgPOldw0FFNw3LL9ycIiKAind5P5x6GQFptqMSi4ZvJLbnRj/icdGzdRAGPmABobd7h1aTjcGf0/qOd4fHeg7ieO9xQyZ4LxBtxnMSdMDH08wyYNm1LSzt7QXWWJgtOQZBvWxWbkse/FtYtsXfd3IT8/mHg701GuyJuCk57Q1aTh9As+oT9BGJuyYLtmH8+r3aMLnaugmxg7p/k3eEYXabgBVfo4vWuznlf+eButjxfhz/OZozfEcSs6fniZhsK2abhJ8PsNabzlaXfBt48qvTxJvH2n8h+AaWF9FLYIz+ezKMKadTaHNfv0UfxPJIQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQnw3HgHNJIea1n5GlwAAAABJRU5ErkJggg==`
+			break
+
+		case 'checklist':
+			png = `iVBORw0KGgoAAAANSUhEUgAAAEgAAAA6CAYAAAATBx+NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAG2SURBVHgB7ZThTQJBEIUHYwHXgVcCVKB0cFQgVgAdgBWIFYAVgBUcVABWwFqBWAHOy70zm4tBst4PQ96XvFxud/bN3tzOmgkh/iPH47Fwla69a+7K6rEoZkYVjKs15vyI71vXhGNj+EXzW3ojrtvIP//Jx5U38kEzS+DaEsAG/LF0PbseXU8ufHRw5VFohnA+oQHHg3vc+RObfuC6uY99Mi5njinmO53Oge9Zwztn0eDTZ24U+oW+yDFi3mAJJBXIKVw733h9EgbcMDaLvz1k3E1jYzmfgR6v7rGIPA6uIeNwEhc+v7LTBK67d21cfV+DscCiHvx9bYlcWQtgQ65dNHRL5Y3QeBwF/Yg8dvwwi+a79ntuFKfnerPqtJRoSWuJ1AKhGF20Ce+HZX0fWPXH0BY44ptozfc4/yhORsH7or5jpozFfI85xqc2grvIqnaHH05hbmcU9lySCsQPxN2DNsApyPh+ChSiZsrWwV2xp0ew6i6pcwR6TtgqoOT6MvJdu97pA63+0lKt08ZxbsujzdYSQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQghxWXwB7OMuc15ZyCMAAAAASUVORK5CYII=`
+			break
+
+		case 'qr':
+			png = `iVBORw0KGgoAAAANSUhEUgAAAEgAAAA6CAYAAAATBx+NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFsSURBVHgB7dTRUcJAFIXhxfFd7AArUCuQEugAOhArMB0gFWgHxgoSK5AOQgfBCuK5eHdY0Dgy5iHO/N/MnZBzsyHZJBsCgP+iaZqRqlBVqkfb9zxmb6rFN+Puk/6kJZ95Nk+y5+Q/cs9jXYW+8Qt7UI394oskn3tex5v13sL7Ez/GDFtyG5/55MTftR9fqJ48txqGDpyGjthFaTNSZYPBYKP9tX5X8QnLRrXybcrGLTUm9/OsWvKpZ9tzKS+1LZXfahvfujO/huD9PzsJHbPJaWnZp1Wr3lV5ktuT3iTjSz/HXh6+Tmyax96F6sarE529QcHfDls3tD1XXarWutm1Muvfhc+nOz2YxFfLdEzpffssr1UvB/lYtVRt1xb/hKbei29drnNnoa98vaianbnnls18rahj7r24sDdp74c8S85fNbvFu2j2jUNf+c2N0on4xZjhMTkAAAAAAAAAAAAAAAAAAAAAAAAAAMf4ADranYWgCZjnAAAAAElFTkSuQmCC`
+			break
+
+		case 'map':
+			png = `iVBORw0KGgoAAAANSUhEUgAAAEgAAAA6CAYAAAATBx+NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADxSURBVHgB7dRhTcRAEMXxKUFAJVQCEg4FHA7qAJwQFBAUgIMrCsAB56B10HtzeU1GwKVNmv8veWl3dvthN52NALAX8zwflH+lL7U31zqPe49fy5qTa7+5PvbKB5ROHrfe+FwO6FsZlzWu5Zqjv8+5Y6zkPrbxkJvVs6vFPDA9npRn5SsPrWmas6cnvQ+q5XsbK7mLbbwrL85nqeefMTlnpS9zeWCj54bYo9JirZ/Xu2dpMd81f8rHcu/4u6XFuljZJi2mVpm02UGvP6XcKQfl0a2UbTS6FdNU2g0AAAAAAAAAAAAAAAAAAAAAAAAAANzSBdGTyjOnDtskAAAAAElFTkSuQmCC`
+			break
+
 		default:
 			// BLANK
 			png = `iVBORw0KGgoAAAANSUhEUgAAAEgAAAA6CAYAAAATBx+NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAmSURBVHgB7cABAQAAAIIg/69uSFAAAAAAAAAAAAAAAAAAAAAArwZBegAB2I2aJAAAAABJRU5ErkJggg==`
@@ -275,9 +319,35 @@ const graphicIcons = (graphic) => {
 	return { png }
 }
 
+const replaceWithDataSource = (text, dynamicText, keepBrakets = false) => {
+	const array = text.split(/\[(.*?)\]/g)
+	let array2
+	const regEx = /\[(.*?)\]/g
+	const match = text.match(regEx)
+
+	if (!match) return text
+
+	array2 = [...array]
+
+	match.forEach((m, i) => {
+		let m2 = m.replace('[', '')
+		let m3 = m2.replace(']', '')
+
+		const index = array.indexOf(m3)
+
+		let returnString = dynamicText?.[m3]
+
+		array2.splice(index, 1)
+		array2.splice(index, 0, !keepBrakets ? returnString : `[${returnString || 'Not set'}]`)
+	})
+
+	return array2.join('')
+}
+
 module.exports = {
 	graphicToReadableLabel,
 	stringToMS,
 	graphicColours,
 	graphicIcons,
+	replaceWithDataSource,
 }

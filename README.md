@@ -4,6 +4,12 @@ See HELP.md and LICENSE
 
 ## Changelog
 
+**v2.2.0**
+
+- Now supporting `Text` and `List` variables.
+- Added `Now next then`, `Map`, `Checklist` and `QR code icons`.
+- Fix: Select List index when setting and adding to Varaible Lists.
+
 **v2.1.0**
 
 - Support for more graphic types.

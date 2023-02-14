@@ -1,9 +1,10 @@
-const { graphicToReadableLabel } = require('./utils')
+const { graphicToReadableLabel, replaceWithDataSource } = require('./utils')
 
 exports.updateVariableDefinitions = function () {
 	const variables = []
 
 	let SELECTED_PROJECT_GRAPHICS = this.SELECTED_PROJECT_GRAPHICS || []
+	let SELECTED_PROJECT_VARIABLES = this.SELECTED_PROJECT_VARIABLES || {}
 
 	// Add variable for instance Status an other status info
 	variables.push({
@@ -17,6 +18,13 @@ exports.updateVariableDefinitions = function () {
 		return variables.push({
 			label: graphicToReadableLabel(g).label,
 			name: `graphic_${g.id}_contents`,
+		})
+	})
+
+	Object.entries(SELECTED_PROJECT_VARIABLES).map(([id]) => {
+		return variables.push({
+			label: id,
+			name: id,
 		})
 	})
 

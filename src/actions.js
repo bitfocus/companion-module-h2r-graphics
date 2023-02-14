@@ -877,16 +877,13 @@ exports.getActionsV2 = function () {
 			label: 'Variable List - Add item',
 			options: [
 				{
-					type: 'dropdown',
+					type: 'number',
 					label: 'List',
 					id: 'listId',
 					default: '1',
-					choices: [
-						{
-							id: '1',
-							label: '1',
-						},
-					],
+					min: 1,
+					max: 100,
+					step: 1,
 				},
 				{
 					type: 'textinput',
@@ -909,16 +906,13 @@ exports.getActionsV2 = function () {
 			label: 'Variable List - Select row',
 			options: [
 				{
-					type: 'dropdown',
+					type: 'number',
 					label: 'List',
 					id: 'listId',
 					default: '1',
-					choices: [
-						{
-							id: '1',
-							label: '1',
-						},
-					],
+					min: 1,
+					max: 100,
+					step: 1,
 				},
 				{
 					type: 'dropdown',
