@@ -1,13 +1,10 @@
-var io = require('socket.io-client')
+import io from 'socket.io-client'
 
-const { graphicToReadableLabel, replaceWithDataSource } = require('./utils')
-const { initPresets } = require('./presets')
+import { graphicToReadableLabel, replaceWithDataSource } from './utils.js'
 
 let socket = null
 
-exports.init = function () {
-	var self = this
-
+export const init_http = (self) => {
 	if (self.config.host) {
 		let uri = `http://${self.config.host}:${self.config.portV2}`
 		socket = io.connect(uri, {
@@ -16,58 +13,63 @@ exports.init = function () {
 		})
 
 		socket.on('connect', () => {
-			self.status(self.STATE_OK)
-			self.setVariable(`connected_state`, 'True')
-
-			console.log(socket.id) // undefined
+			self.updateStatus('ok')
 		})
 
 		socket.on('error', function (err) {
-			self.status(self.STATUS_ERROR, err)
-			self.setVariable(`connected_state`, 'False')
+			self.updateStatus('Error')
 
-			// socket.emit('companion')
 			console.log('error', err)
 		})
 
 		socket.on('disconnect', function () {
-			self.status(self.STATUS_ERROR)
-			self.setVariable(`connected_state`, 'False')
+			self.updateStatus('Disconnected')
 		})
 
-		socket.on('connected', function (data) {
-			console.log('connected')
+		socket.on('connected', function () {
+			self.updateStatus('ok')
 		})
 
 		socket.on('updateFrontend', function (data) {
-			//add last message received variable here
-
 			if (data.projects[self.config.projectId] === undefined) {
+				self.updateStatus(`Project "${self.config.projectId}" not found.`)
 				return self.log('info', `H2R Graphics project (${self.config.projectId}) not found!`)
 			}
 
 			if (data.projects) {
+				self.updateStatus(`ok`)
 				self.PROJECTS = data.projects
 				self.SELECTED_PROJECT_GRAPHICS = data.projects[self.config.projectId].cues || []
 				self.SELECTED_PROJECT_MEDIA = data.projects[self.config.projectId].media || []
 				self.SELECTED_PROJECT_THEMES = data.projects[self.config.projectId].themes || {}
 				self.SELECTED_PROJECT_VARIABLES = data.projects[self.config.projectId].dynamicText || {}
 
-				data.projects[self.config.projectId].cues.map((c) => {
-					const { id, contents } = graphicToReadableLabel(c)
+				let variables = []
+				let variableValues = {}
 
-					self.setVariable(`graphic_${id}_contents`, replaceWithDataSource(contents, self.SELECTED_PROJECT_VARIABLES))
+				data.projects[self.config.projectId].cues.map((c) => {
+					const { id, label, contents } = graphicToReadableLabel(c)
+					variables.push({
+						variableId: `graphic_${id}_contents`,
+						name: label,
+					})
+					variableValues[`graphic_${id}_contents`] = replaceWithDataSource(contents, self.SELECTED_PROJECT_VARIABLES)
 				})
 				Object.entries(data.projects[self.config.projectId].dynamicText).map(([id, val]) => {
-					self.setVariable(id, val)
+					variables.push({
+						variableId: id,
+						name: id,
+					})
+					variableValues[id] = val
 				})
+				self.setVariableDefinitions(variables)
+				self.setVariableValues(variableValues)
 			}
 
-			self.actions()
-			self.feedback()
-			self.updateVariableDefinitions()
+			self.updateActions()
+			self.updatePresets()
+			self.updateFeedbacks()
 			self.checkFeedbacks('graphic_status')
-			initPresets.bind(self)()
 		})
 	}
 }

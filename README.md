@@ -4,6 +4,11 @@ See HELP.md and LICENSE
 
 ## Changelog
 
+**v3.0.0**
+
+- Support for Companion v3.x
+- Removal of H2R Graphics v1 support.
+
 **v2.2.0**
 
 - Now supporting `Text` and `List` variables.

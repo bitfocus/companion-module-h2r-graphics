@@ -1,32 +1,26 @@
 {
 	"name": "h2r-graphics",
-	"version": "2.2.0",
-	"api_version": "1.0.0",
-	"keywords": [
-		"Graphics"
-	],
-	"manufacturer": "Here to Record",
-	"product": "H2R Graphics",
-	"shortname": "h2r-graphics",
-	"description": "Live production graphics just got easier",
+	"version": "3.0.0",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"format": "prettier -w .",
+		"lint:raw": "eslint --ext .ts --ext .js --ignore-pattern dist --ignore-pattern pkg",
+		"lint": "yarn lint:raw ."
 	},
+	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/bitfocus/companion-module-h2r-graphics.git"
+		"url": "git+https://github.com/bitfocus/companion-module-generic-osc.git"
 	},
-	"author": "Joseph Adams <josephdadams@gmail.com>",
-	"contributors": [
-		"John Barker <john@heretorecord.com>"
-	],
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/bitfocus/companion-module-h2r-graphics/issues"
-	},
-	"homepage": "https://github.com/bitfocus/companion-module-h2r-graphics#readme",
 	"dependencies": {
-		"socket.io-client": "^4.4.0"
-	}
+		"@companion-module/base": "~1.0.2",
+		"got": "^12.5.3",
+		"socket.io-client": "^4.6.0"
+	},
+	"devDependencies": {
+		"@companion-module/tools": "^0.5.1"
+	},
+	"prettier": "@companion-module/tools/.prettierrc.json",
+	"type": "module"
 }

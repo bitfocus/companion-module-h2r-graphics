@@ -1,93 +1,113 @@
-const { graphicToReadableLabel, graphicColours, graphicIcons, replaceWithDataSource } = require('./utils')
+import { combineRgb } from '@companion-module/base'
+import { graphicToReadableLabel, graphicColours, graphicIcons, replaceWithDataSource } from './utils.js'
 
-exports.initPresets = function () {
-	const presets = []
-	let SELECTED_PROJECT_GRAPHICS = this.SELECTED_PROJECT_GRAPHICS || []
-	let SELECTED_PROJECT_VARIABLES = this.SELECTED_PROJECT_VARIABLES || {}
+export const initPresets = (self) => {
+	const presets = {}
+	let SELECTED_PROJECT_GRAPHICS = self.SELECTED_PROJECT_GRAPHICS || []
+	let SELECTED_PROJECT_VARIABLES = self.SELECTED_PROJECT_VARIABLES || {}
 
-	presets.push({
+	presets['Run'] = {
+		type: 'button',
 		category: 'Basic actions',
-		label: 'Run',
-		bank: {
-			style: 'text',
+		name: 'Run',
+		style: {
 			text: 'Run',
 			size: '18',
-			color: this.rgb(255, 255, 255),
-			bgcolor: this.rgb(0, 0, 0),
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
 		},
-		actions: [
+		steps: [
 			{
-				action: 'run',
+				down: [
+					{
+						actionId: 'run',
+					},
+				],
+				up: [],
 			},
 		],
-	})
+		feedbacks: [],
+	}
 
-	presets.push({
+	presets['Hide'] = {
+		type: 'button',
 		category: 'Basic actions',
-		label: 'Hide all graphics',
-		bank: {
-			style: 'text',
+		name: 'Hide all graphics',
+		style: {
 			text: 'Hide all',
 			size: '18',
-			color: this.rgb(255, 255, 255),
-			bgcolor: this.rgb(0, 0, 0),
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
 		},
-		actions: [
+		steps: [
 			{
-				action: 'clear',
+				down: [
+					{
+						actionId: 'clear',
+					},
+				],
+				up: [],
 			},
 		],
-	})
+		feedbacks: [],
+	}
 
 	const createPresetShowHide = (category, item) => {
 		let bgColour = graphicColours(item.type).bgColour
 		let pngIcon = graphicIcons(item.type).png
 		return {
 			category,
-			label: replaceWithDataSource(graphicToReadableLabel(item).label, SELECTED_PROJECT_VARIABLES),
-			bank: {
-				style: 'text',
-				text: `$(${this.config.label}:graphic_${item.id}_contents)`,
+			type: 'button',
+			name: replaceWithDataSource(graphicToReadableLabel(item).label, SELECTED_PROJECT_VARIABLES),
+			style: {
+				text: `$(${self.config.label}:graphic_${item.id}_contents)`,
 				png64: pngIcon,
 				pngalignment: 'center:center',
 				size: '18',
-				color: this.rgb(255, 255, 255),
-				bgcolor: this.rgb(bgColour[0], bgColour[1], bgColour[2]),
+				color: combineRgb(255, 255, 255),
+				bgcolor: combineRgb(bgColour[0], bgColour[1], bgColour[2]),
 				latch: false,
 			},
-			actions: [{ action: 'showHide', options: { graphicId: item.id, status: 'toggle' } }],
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'showHide',
+							options: { graphicId: item.id, status: 'toggle' },
+						},
+					],
+					up: [],
+				},
+			],
 			feedbacks: [
 				{
-					type: 'graphic_status',
+					feedbackId: 'graphic_status',
 					options: {
 						graphicId: item.id,
 						status: 'coming',
-						fg: this.rgb(0, 0, 0),
 					},
 					style: {
-						bgcolor: this.rgb(132, 0, 0),
+						bgcolor: combineRgb(132, 0, 0),
 					},
 				},
 				{
-					type: 'graphic_status',
+					feedbackId: 'graphic_status',
 					options: {
 						graphicId: item.id,
 						status: 'onair',
-						fg: this.rgb(0, 0, 0),
 					},
 					style: {
-						bgcolor: this.rgb(255, 0, 0),
+						bgcolor: combineRgb(255, 0, 0),
 					},
 				},
 				{
-					type: 'graphic_status',
+					feedbackId: 'graphic_status',
 					options: {
 						graphicId: item.id,
 						status: 'going',
-						fg: this.rgb(0, 0, 0),
 					},
 					style: {
-						bgcolor: this.rgb(132, 0, 0),
+						bgcolor: combineRgb(132, 0, 0),
 					},
 				},
 			],
@@ -98,12 +118,8 @@ exports.initPresets = function () {
 		if (graphic.type === 'section') return null
 		const preset = createPresetShowHide('Show/Hide', graphic)
 
-		presets.push(preset)
+		presets[graphic.id] = preset
 	})
 
-	if (this.config.useV2 === true) {
-		this.setPresetDefinitions(presets)
-	} else {
-		this.setPresetDefinitions([])
-	}
+	return presets
 }

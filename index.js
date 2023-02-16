@@ -1,134 +1,75 @@
-const instance_skel = require('../../instance_skel')
-const upgradeScripts = require('./upgrades')
-const { getConfigFields } = require('./src/config')
-const { initFeedbacks } = require('./src/feedback')
-const { updateVariableDefinitions } = require('./src/variables')
-const { executeActionV1, executeActionV2, getActionsV1, getActionsV2 } = require('./src/actions')
-const { initPresets } = require('./src/presets')
-const tcp = require('./src/tcp')
+import { InstanceBase, runEntrypoint } from '@companion-module/base'
+import { upgrade } from './src/upgrades.js'
+import { init_http } from './src/tcp.js'
+import { actionsV2 } from './src/actions.js'
+import { initPresets } from './src/presets.js'
+import { initFeedbacks } from './src/feedback.js'
 
-function instance(system, id, config) {
-	var self = this
-
-	// super-constructor
-	instance_skel.apply(this, arguments)
-
-	self.actions(system) // export actions
-
-	self.init_tcp()
-	self.feedback()
-	initPresets.bind(this)()
-	self.updateVariableDefinitions = updateVariableDefinitions
-
-	return self
-}
-
-instance.GetUpgradeScripts = function () {
-	return upgradeScripts
-}
-
-instance.prototype.CHOICES_showhide = [
-	{ id: 'show', label: 'Show' },
-	{ id: 'hide', label: 'Hide' },
-]
-
-instance.prototype.CHOICES_pauseresume = [
-	{ id: 'pause', label: 'Pause' },
-	{ id: 'resume', label: 'Resume' },
-]
-
-instance.prototype.CHOICES_image = [
-	{ id: 'next', label: 'Next' },
-	{ id: 'previous', label: 'Previous' },
-	{ id: 'hide', label: 'Hide' },
-]
-
-instance.prototype.GRAPHIC_STATUS_TOGGLES = [
-	{ id: 'coming', label: 'Show' },
-	{ id: 'going', label: 'Hide' },
-	{ id: 'toggle', label: 'Toggle' },
-	{ id: 'cued', label: 'Cue on' },
-	{ id: 'cuedoff', label: 'Cue off' },
-]
-
-instance.prototype.GRAPHIC_STATUS_OPTIONS = [
-	{ id: 'ready', label: 'Ready' },
-	{ id: 'cued', label: 'Cue on' },
-	{ id: 'coming', label: 'Coming on air' },
-	{ id: 'onair', label: 'On air' },
-	{ id: 'going', label: 'Going off air' },
-	{ id: 'cuedoff', label: 'Cue off' },
-	{ id: 'offair', label: 'Off air' },
-]
-
-instance.prototype.GRAPHIC_POSITION_OPTIONS = [
-	{ id: 'tl', label: 'Top Left' },
-	{ id: 'tc', label: 'Top Middle' },
-	{ id: 'tr', label: 'Top Right' },
-	{ id: 'ml', label: 'Middle Left' },
-	{ id: 'mc', label: 'Middle' },
-	{ id: 'mr', label: 'Middle Right' },
-	{ id: 'bl', label: 'Bottom Left' },
-	{ id: 'bc', label: 'Bottom Middle' },
-	{ id: 'br', label: 'Bottom Right' },
-]
-
-instance.prototype.updateConfig = function (config) {
-	var self = this
-
-	if (self.config.useV2 !== config.useV2) {
-		self.log('info', `Version change: You may need to replace existing actions when switching between versions!`)
-
-		self.config = config
-		return self.actions()
+class H2RGraphicsInstance extends InstanceBase {
+	constructor(internal) {
+		super(internal)
 	}
 
-	self.config = config
+	async init(config) {
+		this.config = config
 
-	self.feedback()
-	self.init_tcp()
-	initPresets.bind(this)()
-}
-instance.prototype.init = function () {
-	var self = this
+		this.updateActions()
 
-	self.updateVariableDefinitions()
-}
+		init_http(this)
+	}
+	// When module gets deleted
+	async destroy() {
+		this.log('debug', 'destroy')
+	}
 
-instance.prototype.init_tcp = function () {
-	tcp.init.bind(this)()
-}
+	async configUpdated(config) {
+		this.config = config
+	}
 
-// Return config fields for web config
-instance.prototype.config_fields = function () {
-	return getConfigFields.bind(this)()
-}
+	// Return config fields for web config
+	getConfigFields() {
+		return [
+			{
+				type: 'textinput',
+				id: 'host',
+				label: 'Target IP',
+				width: 6,
+				default: '127.0.0.1',
+				regex: this.REGEX_IP,
+			},
+			{
+				type: 'textinput',
+				id: 'portV2',
+				label: 'Target Port',
+				width: 3,
+				default: '4001',
+				regex: this.REGEX_PORT,
+				isVisible: (configValues) => configValues.useV2 === true,
+			},
+			{
+				type: 'textinput',
+				id: 'projectId',
+				label: 'Project ID',
+				width: 3,
+				default: 'ABCD',
+				isVisible: (configValues) => configValues.useV2 === true,
+			},
+		]
+	}
 
-// When module gets deleted
-instance.prototype.destroy = function () {
-	var self = this
-	self.debug('destroy')
-}
+	updateActions() {
+		this.setActionDefinitions(actionsV2(this))
+	}
 
-instance.prototype.actions = function () {
-	if (this.config.useV2 === true) {
-		this.setActions(getActionsV2.bind(this)())
-	} else {
-		this.setActions(getActionsV1.bind(this)())
+	updatePresets() {
+		const presets = initPresets(this)
+		this.setPresetDefinitions(presets)
+	}
+	updateFeedbacks() {
+		const feedbacks = initFeedbacks(this)
+		this.log('debug', JSON.stringify(feedbacks))
+		this.setFeedbackDefinitions(feedbacks)
 	}
 }
 
-instance.prototype.action = function (action) {
-	if (this.config.useV2 === true) {
-		return executeActionV2.bind(this)(action)
-	} else {
-		return executeActionV1.bind(this)(action)
-	}
-}
-
-instance.prototype.feedback = function (feedback, bank) {
-	return initFeedbacks.bind(this)(feedback, bank)
-}
-
-instance_skel.extendedBy(instance)
-exports = module.exports = instance
+runEntrypoint(H2RGraphicsInstance, upgrade)

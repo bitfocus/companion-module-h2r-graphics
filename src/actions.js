@@ -1,243 +1,67 @@
-const { graphicToReadableLabel, stringToMS } = require('./utils')
+import got from 'got'
 
-exports.getActionsV1 = function () {
-	return {
-		clearall: {
-			label: 'v1 - Clear All Graphics',
-		},
-		lowerthirdsShow: {
-			label: 'v1 - Lower Third - Show',
-			options: [
-				{
-					type: 'textinput',
-					label: 'Value',
-					id: 'value',
-					default: 1,
-					regex: this.REGEX_SIGNED_NUMBER,
-					tooltip: '(replace ‘1’ with whichever lower third you want to show)',
-				},
-			],
-		},
-		lowerthirdsHide: {
-			label: 'v1 - Lower Thirds - Hide',
-		},
-		ticker: {
-			label: 'v1 - Ticker - Show/Hide',
-			options: [
-				{
-					type: 'dropdown',
-					label: 'Show/Hide',
-					id: 'value',
-					default: 'show',
-					choices: this.CHOICES_showhide,
-				},
-			],
-		},
-		timer: {
-			label: 'v1 - Timer - Show/Hide',
-			options: [
-				{
-					type: 'dropdown',
-					label: 'Show/Hide',
-					id: 'value',
-					default: 'show',
-					choices: this.CHOICES_showhide,
-				},
-			],
-		},
-		timerCustomUp: {
-			label: 'v1 - Timer - Custom UP',
-			options: [
-				{
-					type: 'textinput',
-					label: 'Value',
-					id: 'value',
-					default: '01:00',
-					tooltip: 'hh:mm (e.g. 01:00 = 1 hour timer)',
-				},
-			],
-		},
-		timerCustomDown: {
-			label: 'v1 - Timer - Custom DOWN',
-			options: [
-				{
-					type: 'textinput',
-					label: 'Value',
-					id: 'value',
-					default: '00:01',
-					tooltip: 'hh:mm (e.g. 00:01 = 1 minute timer)',
-				},
-			],
-		},
-		timerCustomDownTimeOfDay: {
-			label: 'v1 - Timer - Custom Down to Time of Day',
-			options: [
-				{
-					type: 'textinput',
-					label: 'Value',
-					id: 'value',
-					default: '13:00',
-					tooltip: 'hh:mm (e.g. 13:00 = Count down to 13:00)',
-				},
-			],
-		},
-		timerCurrentTime: {
-			label: 'v1 - Timer - Current Time of Day',
-		},
-		stopwatch: {
-			label: 'v1 - Stopwatch',
-		},
-		timerPauseResume: {
-			label: 'v1 - Timer - Pause/Resume',
-			options: [
-				{
-					type: 'dropdown',
-					label: 'Pause/Resume',
-					id: 'value',
-					default: 'pause',
-					choices: this.CHOICES_pauseresume,
-				},
-			],
-		},
-		timerPreMessage: {
-			label: 'v1 - Timer - Set pre-timer custom message',
-			options: [
-				{
-					type: 'textinput',
-					label: 'Value',
-					id: 'value',
-					default: 'Starting soon...',
-					tooltip: 'This custom message appears above the timer.',
-				},
-			],
-		},
-		logo: {
-			label: 'v1 - Logo - Show/Hide',
-			options: [
-				{
-					type: 'dropdown',
-					label: 'Show/Hide',
-					id: 'value',
-					default: 'show',
-					choices: this.CHOICES_showhide,
-				},
-			],
-		},
-		message: {
-			label: 'v1 - Message - Show/Hide',
-			options: [
-				{
-					type: 'dropdown',
-					label: 'Show/Hide',
-					id: 'value',
-					default: 'show',
-					choices: this.CHOICES_showhide,
-				},
-			],
-		},
-		messageCustom: {
-			label: 'v1 - Message - Set a custom message',
-			options: [
-				{
-					type: 'textinput',
-					label: 'Value',
-					id: 'value',
-					default: 'LIVE!',
-					tooltip: 'Display a custom message on your output screen.',
-				},
-			],
-		},
-		break: {
-			label: 'v1 - Break - Show/Hide',
-			options: [
-				{
-					type: 'dropdown',
-					label: 'Show/Hide',
-					id: 'value',
-					default: 'show',
-					choices: this.CHOICES_showhide,
-				},
-			],
-		},
-		chatHide: {
-			label: 'v1 - Chat - Hide',
-		},
-		imageNextPreviousHide: {
-			label: 'v1 - Image - Next/Previous/Hide',
-			options: [
-				{
-					type: 'dropdown',
-					label: 'Next/Previous/Hide',
-					id: 'value',
-					default: 'next',
-					choices: this.CHOICES_image,
-				},
-			],
-		},
-		imageSpecific: {
-			label: 'v1 - Image - Show Specific',
-			options: [
-				{
-					type: 'textinput',
-					label: 'Value',
-					id: 'value',
-					default: '1',
-					tooltip: "Display a specific image, where '1' will show the first image.",
-				},
-			],
-		},
-		score: {
-			label: 'v1 - Score - Show/Hide',
-			options: [
-				{
-					type: 'dropdown',
-					label: 'Show/Hide',
-					id: 'value',
-					default: 'show',
-					choices: this.CHOICES_showhide,
-				},
-			],
-		},
-		scoreIncreaseDecrease: {
-			label: 'v1 - Score - Increase/Decrease score for specific team',
-			options: [
-				{
-					type: 'textinput',
-					label: 'Team',
-					id: 'team',
-					tooltip: 'Team to increase/decrease score.',
-				},
-				{
-					type: 'textinput',
-					label: 'Score',
-					id: 'score',
-					tooltip: "'1' would increase by 1 point, '-10' would decrease by 10 points.",
-				},
-			],
-		},
+import { graphicToReadableLabel, stringToMS } from './utils.js'
+
+const GRAPHIC_STATUS_TOGGLES = [
+	{ id: 'coming', label: 'Show' },
+	{ id: 'going', label: 'Hide' },
+	{ id: 'toggle', label: 'Toggle' },
+	{ id: 'cued', label: 'Cue on' },
+	{ id: 'cuedoff', label: 'Cue off' },
+]
+
+const GRAPHIC_POSITION_OPTIONS = [
+	{ id: 'tl', label: 'Top Left' },
+	{ id: 'tc', label: 'Top Middle' },
+	{ id: 'tr', label: 'Top Right' },
+	{ id: 'ml', label: 'Middle Left' },
+	{ id: 'mc', label: 'Middle' },
+	{ id: 'mr', label: 'Middle Right' },
+	{ id: 'bl', label: 'Bottom Left' },
+	{ id: 'bc', label: 'Bottom Middle' },
+	{ id: 'br', label: 'Bottom Right' },
+]
+
+export const actionsV2 = (self) => {
+	let SELECTED_PROJECT_GRAPHICS = self.SELECTED_PROJECT_GRAPHICS || []
+	let SELECTED_PROJECT_MEDIA = self.SELECTED_PROJECT_MEDIA || []
+	let SELECTED_PROJECT_THEMES = self.SELECTED_PROJECT_THEMES || {}
+
+	const sendHttpMessage = async (cmd = '', body = {}) => {
+		var baseUri = `http://${self.config.host}:${self.config.portV2}/api/${self.config.projectId}`
+
+		self.log('debug', `ATTEMPTING ${baseUri}/${cmd}`)
+		await got.post(`${baseUri}/${cmd}`, {
+			json: {
+				...body,
+			},
+		})
 	}
-}
 
-exports.getActionsV2 = function () {
-	let SELECTED_PROJECT_GRAPHICS = this.SELECTED_PROJECT_GRAPHICS || []
-	let SELECTED_PROJECT_MEDIA = this.SELECTED_PROJECT_MEDIA || []
-	let SELECTED_PROJECT_THEMES = this.SELECTED_PROJECT_THEMES || {}
 	return {
 		run: {
-			label: 'Run',
+			name: 'Run',
+			options: [],
+			callback: async () => {
+				sendHttpMessage(`run`)
+			},
 		},
 		clear: {
-			label: 'Hide all',
+			name: 'Hide all',
+			options: [],
+			callback: async () => {
+				sendHttpMessage(`clear`)
+			},
 		},
 		showHide: {
-			label: 'Show/Hide graphic',
+			name: 'Show/Hide graphic',
 			options: [
 				{
 					type: 'dropdown',
 					label: 'Show/Hide',
 					id: 'status',
 					default: 'coming',
-					choices: this.GRAPHIC_STATUS_TOGGLES,
+					choices: GRAPHIC_STATUS_TOGGLES,
 				},
 				{
 					type: 'dropdown',
@@ -256,9 +80,14 @@ exports.getActionsV2 = function () {
 					],
 				},
 			],
+			callback: async (action) => {
+				sendHttpMessage(`graphic/${action.options.graphicId}/update`, {
+					status: action.options.status,
+				})
+			},
 		},
 		updateContentLowerThird: {
-			label: 'Update content - Lower third',
+			name: 'Update content - Lower third',
 			options: [
 				{
 					type: 'dropdown',
@@ -276,19 +105,31 @@ exports.getActionsV2 = function () {
 					],
 				},
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
 					label: 'Line one',
 					id: 'line_one',
+					useVariables: true,
 				},
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
 					label: 'Line two',
 					id: 'line_two',
+					useVariables: true,
 				},
 			],
+			callback: async (action) => {
+				let l1 = await self.parseVariablesInString(action.options.line_one || '')
+				let l2 = await self.parseVariablesInString(action.options.line_two || '')
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					line_one: l1,
+					line_two: l2,
+				}
+				await sendHttpMessage(cmd, body)
+			},
 		},
 		updateContentLowerThirdAnimated: {
-			label: 'Update content - Lower Third Animated',
+			name: 'Update content - Lower Third Animated',
 			options: [
 				{
 					type: 'dropdown',
@@ -326,25 +167,33 @@ exports.getActionsV2 = function () {
 					],
 				},
 				{
-					type: 'checkbox',
-					label: 'Two lines',
-					id: 'twoLines',
-					default: true,
-				},
-				{
-					type: 'textwithvariables',
+					type: 'textinput',
 					label: 'Line one',
 					id: 'line_one',
+					useVariables: true,
 				},
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
 					label: 'Line two',
 					id: 'line_two',
+					useVariables: true,
 				},
 			],
+			callback: async (action) => {
+				let l1 = await self.parseVariablesInString(action.options.line_one || '')
+				let l2 = await self.parseVariablesInString(action.options.line_one || '')
+
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					animationName: action.options.animationName,
+					line_one: l1,
+					line_two: l2,
+				}
+				await sendHttpMessage(cmd, body)
+			},
 		},
 		updateContentMessage: {
-			label: 'Update content - Message',
+			name: 'Update content - Message',
 			options: [
 				{
 					type: 'dropdown',
@@ -362,14 +211,24 @@ exports.getActionsV2 = function () {
 					],
 				},
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
 					label: 'Message body',
 					id: 'body',
+					useVariables: true,
 				},
 			],
+			callback: async (action) => {
+				let b = await self.parseVariablesInString(action.options.body || '')
+
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					body: b,
+				}
+				await sendHttpMessage(cmd, body)
+			},
 		},
 		updateContentTime: {
-			label: 'Update content - Time',
+			name: 'Update content - Time',
 			options: [
 				{
 					type: 'dropdown',
@@ -417,9 +276,41 @@ exports.getActionsV2 = function () {
 					default: '00:01:00',
 				},
 			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {}
+				let d = new Date()
+				if (action.options.type === 'time_of_day') {
+					body = {
+						timerType: action.options.type,
+					}
+				} else if (action.options.type === 'to_time_of_day') {
+					body = {
+						timerType: action.options.type,
+						endTime: action.options.time,
+						timeLeft: stringToMS(action.options.time) - d.getMilliseconds(),
+					}
+				} else if (action.options.type === 'countdown') {
+					body = {
+						timerType: action.options.type,
+						duration: action.options.time,
+						durationMS: stringToMS(action.options.time),
+						timeLeft: stringToMS(action.options.time),
+					}
+				} else if (action.options.type === 'countup') {
+					body = {
+						timerType: action.options.type,
+						duration: action.options.time,
+						durationMS: stringToMS(action.options.time),
+						timeLeft: 0,
+					}
+				}
+
+				sendHttpMessage(cmd, body)
+			},
 		},
 		updateContentBigTimer: {
-			label: 'Update content - Big Timer',
+			name: 'Update content - Big Timer',
 			options: [
 				{
 					type: 'dropdown',
@@ -479,9 +370,32 @@ exports.getActionsV2 = function () {
 					default: '00:01:00',
 				},
 			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {}
+				if (action.options.type === 'countdown') {
+					body = {
+						shape: action.options.shape,
+						timerType: action.options.type,
+						duration: action.options.time,
+						durationMS: stringToMS(action.options.time),
+						timeLeft: stringToMS(action.options.time),
+					}
+				} else if (action.options.type === 'countup') {
+					body = {
+						shape: action.options.shape,
+						timerType: action.options.type,
+						duration: action.options.time,
+						durationMS: stringToMS(action.options.time),
+						timeLeft: 0,
+					}
+				}
+
+				sendHttpMessage(cmd, body)
+			},
 		},
 		updateContentImage: {
-			label: 'Update content - Image',
+			name: 'Update content - Image',
 			options: [
 				{
 					type: 'dropdown',
@@ -499,7 +413,7 @@ exports.getActionsV2 = function () {
 					],
 				},
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
 					label: 'Name',
 					id: 'imageName',
 				},
@@ -508,7 +422,7 @@ exports.getActionsV2 = function () {
 					label: 'Image',
 					id: 'imageFilename',
 					choices: [
-						...SELECTED_PROJECT_MEDIA.map((img, i) => {
+						...SELECTED_PROJECT_MEDIA.map((img) => {
 							return {
 								id: img.filename,
 								label: img.originalname,
@@ -517,9 +431,18 @@ exports.getActionsV2 = function () {
 					],
 				},
 			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					name: action.options.image_name,
+					filename: `${action.options.imageFilename}`,
+				}
+
+				sendHttpMessage(cmd, body)
+			},
 		},
 		updateContentTicker: {
-			label: 'Update content - Ticker',
+			name: 'Update content - Ticker',
 			options: [
 				{
 					type: 'dropdown',
@@ -537,19 +460,38 @@ exports.getActionsV2 = function () {
 					],
 				},
 				{
-					type: 'textwithvariables',
+					type: 'textinput',
 					label: 'Title',
 					id: 'title',
+					useVariables: true,
 				},
 				{
 					type: 'textinput',
 					label: 'Items (Use | to split items)',
 					id: 'items',
+					useVariables: true,
 				},
 			],
+			callback: async (action) => {
+				let t = await self.parseVariablesInString(action.options.title || '')
+				let items = await self.parseVariablesInString(action.options.items || '')
+
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					title: t,
+					items: items.split('|').map((item, i) => {
+						return {
+							title: `Item ${i + 1}`,
+							body: item,
+						}
+					}),
+				}
+
+				await sendHttpMessage(cmd, body)
+			},
 		},
 		updateContentWebpage: {
-			label: 'Update content - Webpage',
+			name: 'Update content - Webpage',
 			options: [
 				{
 					type: 'dropdown',
@@ -570,16 +512,30 @@ exports.getActionsV2 = function () {
 					type: 'textinput',
 					label: 'Name',
 					id: 'name',
+					useVariables: true,
 				},
 				{
 					type: 'textinput',
 					label: 'URL',
 					id: 'url',
+					useVariables: true,
 				},
 			],
+			callback: async (action) => {
+				let name = await self.parseVariablesInString(action.options.name || '')
+				let url = await self.parseVariablesInString(action.options.url || '')
+
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					name: name,
+					url: url,
+				}
+
+				await sendHttpMessage(cmd, body)
+			},
 		},
 		updateContentScoreTotal: {
-			label: 'Update content - Score - Total',
+			name: 'Update content - Score - Total',
 			options: [
 				{
 					type: 'dropdown',
@@ -616,6 +572,8 @@ exports.getActionsV2 = function () {
 						{ id: '2', label: '2' },
 						{ id: '3', label: '3' },
 						{ id: '4', label: '4' },
+						{ id: '5', label: '5' },
+						{ id: '6', label: '6' },
 					],
 				},
 				{
@@ -641,9 +599,14 @@ exports.getActionsV2 = function () {
 					range: false,
 				},
 			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/updateScore/${action.options.team}/${action.options.level}/${action.options.type}/${action.options.amount}`
+
+				sendHttpMessage(cmd)
+			},
 		},
 		updateGraphicPosition: {
-			label: 'Update graphic position',
+			name: 'Update graphic position',
 			options: [
 				{
 					type: 'dropdown',
@@ -666,12 +629,19 @@ exports.getActionsV2 = function () {
 					label: 'Position',
 					id: 'position',
 					default: 'mc',
-					choices: [...this.GRAPHIC_POSITION_OPTIONS],
+					choices: [...GRAPHIC_POSITION_OPTIONS],
 				},
 			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					position: action.options.position,
+				}
+				sendHttpMessage(cmd, body)
+			},
 		},
 		updateGraphicX: {
-			label: 'Update graphic offset X',
+			name: 'Update graphic offset X',
 			options: [
 				{
 					type: 'dropdown',
@@ -701,9 +671,16 @@ exports.getActionsV2 = function () {
 					range: false,
 				},
 			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					offsetX: action.options.x,
+				}
+				sendHttpMessage(cmd, body)
+			},
 		},
 		updateGraphicY: {
-			label: 'Update graphic offset Y',
+			name: 'Update graphic offset Y',
 			options: [
 				{
 					type: 'dropdown',
@@ -733,9 +710,16 @@ exports.getActionsV2 = function () {
 					range: false,
 				},
 			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					offsetY: action.options.y,
+				}
+				sendHttpMessage(cmd, body)
+			},
 		},
 		updateGraphicXY: {
-			label: 'Update graphic offset X & Y',
+			name: 'Update graphic offset X & Y',
 			options: [
 				{
 					type: 'dropdown',
@@ -776,9 +760,18 @@ exports.getActionsV2 = function () {
 					range: false,
 				},
 			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					offsetX: action.options.x,
+					offsetY: action.options.y,
+				}
+
+				sendHttpMessage(cmd, body)
+			},
 		},
 		updateGraphicScale: {
-			label: 'Update graphic scale',
+			name: 'Update graphic scale',
 			options: [
 				{
 					type: 'dropdown',
@@ -808,9 +801,17 @@ exports.getActionsV2 = function () {
 					range: false,
 				},
 			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					scale: action.options.scale,
+				}
+
+				sendHttpMessage(cmd, body)
+			},
 		},
 		updateGraphicTheme: {
-			label: 'Update graphic theme',
+			name: 'Update graphic theme',
 			options: [
 				{
 					type: 'dropdown',
@@ -842,9 +843,16 @@ exports.getActionsV2 = function () {
 					],
 				},
 			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					theme: action.options.theme,
+				}
+				sendHttpMessage(cmd, body)
+			},
 		},
 		setTextVariable: {
-			label: 'Set text variable',
+			name: 'Set text variable',
 			options: [
 				{
 					type: 'dropdown',
@@ -872,9 +880,17 @@ exports.getActionsV2 = function () {
 					id: 'text',
 				},
 			],
+			callback: async (action) => {
+				let cmd = `updateVariableText/${action.options.variable}`
+				let body = {
+					text: action.options.text,
+				}
+
+				sendHttpMessage(cmd, body)
+			},
 		},
 		addVariableListItem: {
-			label: 'Variable List - Add item',
+			name: 'Variable List - Add item',
 			options: [
 				{
 					type: 'number',
@@ -901,9 +917,17 @@ exports.getActionsV2 = function () {
 					id: 'colThree',
 				},
 			],
+			callback: async (action) => {
+				let cmd = `updateVariableList/${action.options.listId}/addRow`
+				let body = {
+					row: [{ value: action.options.colOne }, { value: action.options.colTwo }, { value: action.options.colThree }],
+				}
+
+				sendHttpMessage(cmd, body)
+			},
 		},
 		addVariableSelectRow: {
-			label: 'Variable List - Select row',
+			name: 'Variable List - Select row',
 			options: [
 				{
 					type: 'number',
@@ -944,431 +968,19 @@ exports.getActionsV2 = function () {
 					step: 1,
 					required: true,
 					range: false,
+					isVisible: (values) => values.nextPreviousNumber === 'number',
 				},
 			],
+			callback: async (action) => {
+				let cmd
+				if (action.options.nextPreviousNumber === 'next' || action.options.nextPreviousNumber === 'previous') {
+					cmd = `updateVariableList/${action.options.listId}/selectRow/${action.options.nextPreviousNumber}`
+				} else {
+					cmd = `updateVariableList/${action.options.listId}/selectRow/${action.options.number}`
+				}
+
+				sendHttpMessage(cmd)
+			},
 		},
-	}
-}
-
-exports.executeActionV1 = function (action) {
-	var self = this
-
-	self.debug('action: ', action)
-
-	let oscPrefix = '/h2r-graphics/'
-
-	let path = null
-	let bol = []
-
-	switch (action.action) {
-		case 'clearall':
-			path = oscPrefix + 'clear'
-			bol = []
-			break
-		case 'lowerthirdsShow':
-			path = oscPrefix + 'lower-third'
-			bol = [
-				{
-					type: 'i',
-					value: parseInt(action.options.value),
-				},
-			]
-			break
-		case 'lowerthirdsHide':
-			path = oscPrefix + 'lower-third'
-			bol = [
-				{
-					type: 's',
-					value: 'hide',
-				},
-			]
-			break
-		case 'ticker':
-			path = oscPrefix + 'ticker'
-			bol = [
-				{
-					type: 's',
-					value: action.options.value,
-				},
-			]
-			break
-		case 'timer':
-			path = oscPrefix + 'timer'
-			bol = [
-				{
-					type: 's',
-					value: action.options.value,
-				},
-			]
-			break
-		case 'timerCustomUp':
-			path = oscPrefix + 'timer-custom-up'
-			bol = [
-				{
-					type: 's',
-					value: action.options.value,
-				},
-			]
-			break
-		case 'timerCustomDown':
-			path = oscPrefix + 'timer-custom-down'
-			bol = [
-				{
-					type: 's',
-					value: action.options.value,
-				},
-			]
-			break
-		case 'timerCustomDownTimeOfDay':
-			path = oscPrefix + 'timer-custom-down-time-of-day'
-			bol = [
-				{
-					type: 's',
-					value: action.options.value,
-				},
-			]
-			break
-		case 'timerCurrentTime':
-			path = oscPrefix + 'timer-current-time'
-			bol = []
-			break
-		case 'stopwatch':
-			path = oscPrefix + 'stopwatch'
-			bol = []
-			break
-		case 'timerPauseResume':
-			path = oscPrefix + 'timer'
-			bol = [
-				{
-					type: 's',
-					value: action.options.value,
-				},
-			]
-			break
-		case 'timerPreMessage':
-			path = oscPrefix + 'timer-pre-message'
-			bol = [
-				{
-					type: 's',
-					value: action.options.value,
-				},
-			]
-			break
-		case 'logo':
-			path = oscPrefix + 'logo'
-			bol = [
-				{
-					type: 's',
-					value: action.options.value,
-				},
-			]
-			break
-		case 'message':
-			path = oscPrefix + 'message'
-			bol = [
-				{
-					type: 's',
-					value: action.options.value,
-				},
-			]
-			break
-		case 'messageCustom':
-			path = oscPrefix + 'message'
-			bol = [
-				{
-					type: 's',
-					value: action.options.value,
-				},
-			]
-			break
-		case 'break':
-			path = oscPrefix + 'break'
-			bol = [
-				{
-					type: 's',
-					value: action.options.value,
-				},
-			]
-			break
-		case 'chatHide':
-			path = oscPrefix + 'chat'
-			bol = [
-				{
-					type: 's',
-					value: 'hide',
-				},
-			]
-			break
-		case 'imageNextPreviousHide':
-			path = oscPrefix + 'image'
-			bol = [
-				{
-					type: 's',
-					value: action.options.value,
-				},
-			]
-			break
-		case 'imageSpecific':
-			path = oscPrefix + 'image'
-			bol = [
-				{
-					type: 's',
-					value: action.options.value,
-				},
-			]
-			break
-		case 'score':
-			path = oscPrefix + 'score'
-			bol = [
-				{
-					type: 's',
-					value: action.options.value,
-				},
-			]
-			break
-		case 'scoreIncreaseDecrease':
-			path = oscPrefix + 'score-team-' + action.options.team
-			bol = [
-				{
-					type: 's',
-					value: action.options.score,
-				},
-			]
-			break
-		default:
-			self.log('info', `${action.action} is not available when version is set to v1.`)
-			break
-	}
-
-	if (path !== null) {
-		self.log('info', `${self.config.host}:${self.config.port}${path}, ${JSON.stringify(bol)}`)
-		self.oscSend(self.config.host, self.config.port, path, bol)
-	}
-}
-
-exports.executeActionV2 = function (action) {
-	var self = this
-	var baseUri = `http://${self.config.host}:${self.config.portV2}/api/${self.config.projectId}`
-	var cmd = ''
-	var body = {}
-	var header = {}
-
-	var errorHandler = function (err, result) {
-		if (err !== null) {
-			self.log('error', `HTTP ${action.action.toUpperCase()} Request failed (${err.message})`)
-			self.status(self.STATUS_ERROR, result.error.code)
-		} else {
-			self.status(self.STATUS_OK)
-		}
-	}
-
-	self.debug('action: ', action)
-	switch (action.action) {
-		case 'run':
-			cmd = 'run'
-			break
-		case 'clear':
-			cmd = 'clear'
-			break
-		case 'showHide':
-			cmd = `graphic/${action.options.graphicId}/update`
-			body = {
-				status: action.options.status,
-			}
-			break
-		case 'updateContentLowerThird':
-			let lt_line_one
-			let lt_line_two
-			self.system.emit('variable_parse', action.options.line_one, function (value) {
-				lt_line_one = value
-			})
-			self.system.emit('variable_parse', action.options.line_two, function (value) {
-				lt_line_two = value
-			})
-
-			cmd = `graphic/${action.options.graphicId}/update`
-			body = {
-				line_one: lt_line_one,
-				line_two: lt_line_two,
-			}
-			break
-		case 'updateContentLowerThirdAnimated':
-			let lt_animated_line_one
-			let lt_animated_line_two
-			self.system.emit('variable_parse', action.options.line_one, function (value) {
-				lt_animated_line_one = value
-			})
-			self.system.emit('variable_parse', action.options.line_two, function (value) {
-				lt_animated_line_two = value
-			})
-
-			cmd = `graphic/${action.options.graphicId}/update`
-			body = {
-				animationName: action.options.animationName,
-				twoLines: action.options.twoLines,
-				line_one: lt_animated_line_one,
-				line_two: lt_animated_line_two,
-			}
-			break
-		case 'updateContentMessage':
-			let message_body
-			self.system.emit('variable_parse', action.options.body, function (value) {
-				message_body = value
-			})
-			cmd = `graphic/${action.options.graphicId}/update`
-			body = {
-				body: message_body,
-			}
-			break
-		case 'updateContentTime':
-			cmd = `graphic/${action.options.graphicId}/update`
-			let d = new Date()
-			if (action.options.type === 'time_of_day') {
-				body = {
-					timerType: action.options.type,
-				}
-			} else if (action.options.type === 'to_time_of_day') {
-				body = {
-					timerType: action.options.type,
-					endTime: action.options.time,
-					timeLeft: stringToMS(action.options.time) - d.getMilliseconds(),
-				}
-			} else if (action.options.type === 'countdown') {
-				body = {
-					timerType: action.options.type,
-					duration: action.options.time,
-					durationMS: stringToMS(action.options.time),
-					timeLeft: stringToMS(action.options.time),
-				}
-			} else if (action.options.type === 'countup') {
-				body = {
-					timerType: action.options.type,
-					duration: action.options.time,
-					durationMS: stringToMS(action.options.time),
-					timeLeft: 0,
-				}
-			}
-			break
-		case 'updateContentBigTimer':
-			cmd = `graphic/${action.options.graphicId}/update`
-			if (action.options.type === 'countdown') {
-				body = {
-					shape: action.options.shape,
-					timerType: action.options.type,
-					duration: action.options.time,
-					durationMS: stringToMS(action.options.time),
-					timeLeft: stringToMS(action.options.time),
-				}
-			} else if (action.options.type === 'countup') {
-				body = {
-					shape: action.options.shape,
-					timerType: action.options.type,
-					duration: action.options.time,
-					durationMS: stringToMS(action.options.time),
-					timeLeft: 0,
-				}
-			}
-			break
-		case 'updateContentImage':
-			let image_name
-			self.system.emit('variable_parse', action.options.imageName, function (value) {
-				image_name = value
-			})
-			cmd = `graphic/${action.options.graphicId}/update`
-			body = {
-				name: image_name,
-				filename: `${action.options.imageFilename}`,
-			}
-			break
-		case 'updateContentTicker':
-			let ticker_title
-			self.system.emit('variable_parse', action.options.title, function (value) {
-				ticker_title = value
-			})
-			cmd = `graphic/${action.options.graphicId}/update`
-			body = {
-				title: ticker_title,
-				items: action.options.items.split('|').map((item, i) => {
-					return {
-						title: `Item ${i + 1}`,
-						body: item,
-					}
-				}),
-			}
-			break
-		case 'updateContentWebpage':
-			cmd = `graphic/${action.options.graphicId}/update`
-			body = {
-				name: action.options.name,
-				url: action.options.url,
-			}
-			break
-		case 'updateContentScoreTotal':
-			cmd = `graphic/${action.options.graphicId}/updateScore/${action.options.team}/${action.options.level}/${action.options.type}/${action.options.amount}`
-			break
-		case 'updateGraphicPosition':
-			cmd = `graphic/${action.options.graphicId}/update`
-			body = {
-				position: action.options.position,
-			}
-			break
-		case 'updateGraphicScale':
-			cmd = `graphic/${action.options.graphicId}/update`
-			body = {
-				scale: action.options.scale,
-			}
-			break
-		case 'updateGraphicX':
-			cmd = `graphic/${action.options.graphicId}/update`
-			body = {
-				offsetX: action.options.x,
-			}
-			break
-		case 'updateGraphicY':
-			cmd = `graphic/${action.options.graphicId}/update`
-			body = {
-				offsetY: action.options.y,
-			}
-			break
-		case 'updateGraphicXY':
-			cmd = `graphic/${action.options.graphicId}/update`
-			body = {
-				offsetX: action.options.x,
-				offsetY: action.options.y,
-			}
-			break
-		case 'updateGraphicTheme':
-			cmd = `graphic/${action.options.graphicId}/update`
-			body = {
-				theme: action.options.theme,
-			}
-			break
-		case 'setTextVariable':
-			cmd = `updateVariableText/${action.options.variable}`
-			body = {
-				text: action.options.text,
-			}
-			break
-		case 'addVariableListItem':
-			cmd = `updateVariableList/${action.options.listId}/addRow`
-			body = {
-				row: [{ value: action.options.colOne }, { value: action.options.colTwo }, { value: action.options.colThree }],
-			}
-			break
-		case 'addVariableSelectRow':
-			if (action.options.nextPreviousNumber === 'next' || action.options.nextPreviousNumber === 'previous') {
-				cmd = `updateVariableList/${action.options.listId}/selectRow/${action.options.nextPreviousNumber}`
-			} else {
-				cmd = `updateVariableList/${action.options.listId}/selectRow/${action.options.number}`
-			}
-
-			break
-		default:
-			self.log('info', `${action.action} is not available when version is set to v2.`)
-			break
-	}
-
-	if (cmd !== '') {
-		self.system.emit('rest', `${baseUri}/${cmd}`, body, errorHandler, header)
 	}
 }

@@ -1,21 +1,21 @@
-const msToString = (ms = 0) => {
+export const msToString = (ms = 0) => {
 	let seconds = ms / 1000
 	let hours = parseInt(seconds / 3600)
 	seconds = seconds % 3600
 	let minutes = parseInt(seconds / 60)
 	seconds = Math.ceil(seconds % 60)
 	return `${hours < 10 ? `0${hours}` : `${hours}`}:${minutes < 10 ? `0${minutes}` : `${minutes}`}:${
-		seconds < 10 ? `0${seconds}` : `${seconds === 60 ? 00 : seconds}`
+		seconds < 10 ? `0${seconds}` : `${seconds === 60 ? '00' : seconds}`
 	}`
 }
 
-const stringToMS = (string = '00:00:00') => {
+export const stringToMS = (string = '00:00:00') => {
 	let [h, m, s = '00'] = string.split(':')
 
 	return (parseInt(h) * 60 * 60 + parseInt(m) * 60 + parseInt(s)) * 1000
 }
 
-const graphicToReadableLabel = (graphic) => {
+export const graphicToReadableLabel = (graphic) => {
 	let id = graphic.id
 	let label
 	let contents
@@ -135,7 +135,7 @@ const graphicToReadableLabel = (graphic) => {
 	}
 }
 
-const graphicColours = (graphic) => {
+export const graphicColours = (graphic) => {
 	let bgColour
 
 	switch (graphic) {
@@ -226,7 +226,7 @@ const graphicColours = (graphic) => {
 
 	return { bgColour }
 }
-const graphicIcons = (graphic) => {
+export const graphicIcons = (graphic) => {
 	let png
 
 	switch (graphic) {
@@ -319,7 +319,7 @@ const graphicIcons = (graphic) => {
 	return { png }
 }
 
-const replaceWithDataSource = (text, dynamicText, keepBrakets = false) => {
+export const replaceWithDataSource = (text, dynamicText, keepBrakets = false) => {
 	const array = text.split(/\[(.*?)\]/g)
 	let array2
 	const regEx = /\[(.*?)\]/g
@@ -342,12 +342,4 @@ const replaceWithDataSource = (text, dynamicText, keepBrakets = false) => {
 	})
 
 	return array2.join('')
-}
-
-module.exports = {
-	graphicToReadableLabel,
-	stringToMS,
-	graphicColours,
-	graphicIcons,
-	replaceWithDataSource,
 }
