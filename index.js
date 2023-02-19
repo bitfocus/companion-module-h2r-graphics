@@ -44,7 +44,6 @@ class H2RGraphicsInstance extends InstanceBase {
 				width: 3,
 				default: '4001',
 				regex: this.REGEX_PORT,
-				isVisible: (configValues) => configValues.useV2 === true,
 			},
 			{
 				type: 'textinput',
@@ -52,7 +51,6 @@ class H2RGraphicsInstance extends InstanceBase {
 				label: 'Project ID',
 				width: 3,
 				default: 'ABCD',
-				isVisible: (configValues) => configValues.useV2 === true,
 			},
 		]
 	}
