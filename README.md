@@ -4,6 +4,15 @@ See HELP.md and LICENSE
 
 ## Changelog
 
+**v3.1.0**
+
+- Support for new Utility graphics
+- Fix for crashing when user's project had no Dynamic Text
+
+**v3.0.1**
+
+- Cleanup and help.md improvements
+
 **v3.0.0**
 
 - Support for Companion v3.x

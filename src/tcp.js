@@ -44,6 +44,7 @@ export const init_http = (self) => {
 				self.SELECTED_PROJECT_THEMES = data.projects[self.config.projectId].themes || {}
 				self.SELECTED_PROJECT_VARIABLES = data.projects[self.config.projectId].dynamicText || {}
 
+				let dynamicText = data.projects[self.config.projectId].dynamicText || {}
 				let variables = []
 				let variableValues = {}
 
@@ -55,7 +56,7 @@ export const init_http = (self) => {
 					})
 					variableValues[`graphic_${id}_contents`] = replaceWithDataSource(contents, self.SELECTED_PROJECT_VARIABLES)
 				})
-				Object.entries(data.projects[self.config.projectId].dynamicText).map(([id, val]) => {
+				Object.entries(dynamicText).map(([id, val]) => {
 					variables.push({
 						variableId: id,
 						name: id,

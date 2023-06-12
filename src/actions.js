@@ -534,6 +534,182 @@ export const actionsV2 = (self) => {
 				await sendHttpMessage(cmd, body)
 			},
 		},
+		updateContentUtilityLargeText: {
+			name: 'Update content - Large Text (Utility)',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Graphic',
+					id: 'graphicId',
+					choices: [
+						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'utility_large_text').map((c) => {
+							const { id, label } = graphicToReadableLabel(c)
+
+							return {
+								id,
+								label,
+							}
+						}),
+					],
+				},
+				{
+					type: 'textinput',
+					label: 'Text',
+					id: 'text',
+					useVariables: true,
+				},
+			],
+			callback: async (action) => {
+				let t = await self.parseVariablesInString(action.options.text || '')
+
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					text: t,
+				}
+				await sendHttpMessage(cmd, body)
+			},
+		},
+		speakerTimerRun: {
+			name: 'Run/Resume - Speaker Timer (Utility)',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Graphic',
+					id: 'graphicId',
+					choices: [
+						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'utility_speaker_timer').map((c) => {
+							const { id, label } = graphicToReadableLabel(c)
+
+							return {
+								id,
+								label,
+							}
+						}),
+					],
+				},
+			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/timer/run`
+				await sendHttpMessage(cmd)
+			},
+		},
+		speakerTimerReset: {
+			name: 'Reset - Speaker Timer (Utility)',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Graphic',
+					id: 'graphicId',
+					choices: [
+						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'utility_speaker_timer').map((c) => {
+							const { id, label } = graphicToReadableLabel(c)
+
+							return {
+								id,
+								label,
+							}
+						}),
+					],
+				},
+			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/timer/reset`
+				await sendHttpMessage(cmd)
+			},
+		},
+		speakerTimerPause: {
+			name: 'Pause - Speaker Timer (Utility)',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Graphic',
+					id: 'graphicId',
+					choices: [
+						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'utility_speaker_timer').map((c) => {
+							const { id, label } = graphicToReadableLabel(c)
+
+							return {
+								id,
+								label,
+							}
+						}),
+					],
+				},
+			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/timer/pause`
+				await sendHttpMessage(cmd)
+			},
+		},
+		speakerTimerJump: {
+			name: 'Add/Remove time - Speaker Timer (Utility)',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Graphic',
+					id: 'graphicId',
+					choices: [
+						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'utility_speaker_timer').map((c) => {
+							const { id, label } = graphicToReadableLabel(c)
+
+							return {
+								id,
+								label,
+							}
+						}),
+					],
+				},
+				{
+					type: 'number',
+					label: 'Amount in seconds (+/-)',
+					id: 'amount',
+					default: 10,
+					step: 1,
+					required: true,
+					range: false,
+				},
+			],
+			callback: async (action) => {
+				let t = await self.parseVariablesInString(action.options.amount || 0)
+
+				let cmd = `graphic/${action.options.graphicId}/timer/jump/${t}`
+
+				await sendHttpMessage(cmd)
+			},
+		},
+		speakerTimerDuration: {
+			name: 'Set duration - Speaker Timer (Utility)',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Graphic',
+					id: 'graphicId',
+					choices: [
+						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'utility_speaker_timer').map((c) => {
+							const { id, label } = graphicToReadableLabel(c)
+
+							return {
+								id,
+								label,
+							}
+						}),
+					],
+				},
+				{
+					type: 'textinput',
+					label: 'Time (HH:MM:SS)',
+					id: 'time',
+					default: '00:01:00',
+				},
+			],
+			callback: async (action) => {
+				let t = await self.parseVariablesInString(action.options.time || 0)
+
+				let cmd = `graphic/${action.options.graphicId}/timer/duration/${stringToMS(t) / 1000}`
+
+				await sendHttpMessage(cmd)
+			},
+		},
 		updateContentScoreTotal: {
 			name: 'Update content - Score - Total',
 			options: [
@@ -979,6 +1155,20 @@ export const actionsV2 = (self) => {
 					cmd = `updateVariableList/${action.options.listId}/selectRow/${action.options.number}`
 				}
 
+				sendHttpMessage(cmd)
+			},
+		},
+		sendCustonHTTP: {
+			name: 'Send custom HTTP',
+			options: [
+				{
+					type: 'textinput',
+					label: 'URI',
+					id: 'uri',
+				},
+			],
+			callback: async (action) => {
+				let cmd = `${action.options.uri}`
 				sendHttpMessage(cmd)
 			},
 		},

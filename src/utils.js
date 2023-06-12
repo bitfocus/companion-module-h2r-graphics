@@ -123,6 +123,18 @@ export const graphicToReadableLabel = (graphic) => {
 	} else if (graphic.type === 'checklist') {
 		label = `${graphic.title} (Checklist - ${graphic.id})`
 		contents = `${graphic.title}`
+	} else if (graphic.type === 'utility_large_text') {
+		label = `${graphic.text} (Large Text - ${graphic.id})`
+		contents = `${graphic.text}`
+	} else if (graphic.type === 'utility_time_of_day') {
+		label = `Time of day (Time of Day - ${graphic.id})`
+		contents = `Time of day`
+	} else if (graphic.type === 'utility_pattern') {
+		label = `Pattern - ${graphic.id}`
+		contents = `Pattern`
+	} else if (graphic.type === 'utility_speaker_timer') {
+		label = `${msToString(graphic.duration)} (Speaker timer - ${graphic.id})`
+		contents = ['running'].includes(graphic.state) ? `${graphic.endAt}` : `${msToString(graphic.duration)}`
 	} else {
 		label = `${graphic.type} (${graphic.id})`
 		contents = `${graphic.type} (${graphic.id})`
