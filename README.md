@@ -4,6 +4,11 @@ See HELP.md and LICENSE
 
 ## Changelog
 
+**v3.1.1**
+
+- Package.json cleanup
+- Remove pkg from Github
+
 **v3.1.0**
 
 - Support for new Utility graphics
