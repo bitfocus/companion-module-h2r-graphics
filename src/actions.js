@@ -181,7 +181,7 @@ export const actionsV2 = (self) => {
 			],
 			callback: async (action) => {
 				let l1 = await self.parseVariablesInString(action.options.line_one || '')
-				let l2 = await self.parseVariablesInString(action.options.line_one || '')
+				let l2 = await self.parseVariablesInString(action.options.line_two || '')
 
 				let cmd = `graphic/${action.options.graphicId}/update`
 				let body = {
@@ -570,14 +570,16 @@ export const actionsV2 = (self) => {
 			},
 		},
 		speakerTimerRun: {
-			name: 'Run/Resume - Speaker Timer (Utility)',
+			name: 'Run/Resume - Timer',
 			options: [
 				{
 					type: 'dropdown',
 					label: 'Graphic',
 					id: 'graphicId',
 					choices: [
-						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'utility_speaker_timer').map((c) => {
+						...SELECTED_PROJECT_GRAPHICS.filter((c) =>
+							['utility_speaker_timer', 'time_countdown', 'time_countup'].includes(c.type)
+						).map((c) => {
 							const { id, label } = graphicToReadableLabel(c)
 
 							return {
@@ -594,14 +596,16 @@ export const actionsV2 = (self) => {
 			},
 		},
 		speakerTimerReset: {
-			name: 'Reset - Speaker Timer (Utility)',
+			name: 'Reset - Timer',
 			options: [
 				{
 					type: 'dropdown',
 					label: 'Graphic',
 					id: 'graphicId',
 					choices: [
-						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'utility_speaker_timer').map((c) => {
+						...SELECTED_PROJECT_GRAPHICS.filter((c) =>
+							['utility_speaker_timer', 'time_countdown', 'time_countup'].includes(c.type)
+						).map((c) => {
 							const { id, label } = graphicToReadableLabel(c)
 
 							return {
@@ -618,14 +622,16 @@ export const actionsV2 = (self) => {
 			},
 		},
 		speakerTimerPause: {
-			name: 'Pause - Speaker Timer (Utility)',
+			name: 'Pause - Timer',
 			options: [
 				{
 					type: 'dropdown',
 					label: 'Graphic',
 					id: 'graphicId',
 					choices: [
-						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'utility_speaker_timer').map((c) => {
+						...SELECTED_PROJECT_GRAPHICS.filter((c) =>
+							['utility_speaker_timer', 'time_countdown', 'time_countup'].includes(c.type)
+						).map((c) => {
 							const { id, label } = graphicToReadableLabel(c)
 
 							return {
@@ -642,14 +648,16 @@ export const actionsV2 = (self) => {
 			},
 		},
 		speakerTimerJump: {
-			name: 'Add/Remove time - Speaker Timer (Utility)',
+			name: 'Add/Remove time - Timer',
 			options: [
 				{
 					type: 'dropdown',
 					label: 'Graphic',
 					id: 'graphicId',
 					choices: [
-						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'utility_speaker_timer').map((c) => {
+						...SELECTED_PROJECT_GRAPHICS.filter((c) =>
+							['utility_speaker_timer', 'time_countdown', 'time_countup'].includes(c.type)
+						).map((c) => {
 							const { id, label } = graphicToReadableLabel(c)
 
 							return {
@@ -678,14 +686,16 @@ export const actionsV2 = (self) => {
 			},
 		},
 		speakerTimerDuration: {
-			name: 'Set duration - Speaker Timer (Utility)',
+			name: 'Set duration - Timer',
 			options: [
 				{
 					type: 'dropdown',
 					label: 'Graphic',
 					id: 'graphicId',
 					choices: [
-						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'utility_speaker_timer').map((c) => {
+						...SELECTED_PROJECT_GRAPHICS.filter((c) =>
+							['utility_speaker_timer', 'time_countdown', 'time_countup'].includes(c.type)
+						).map((c) => {
 							const { id, label } = graphicToReadableLabel(c)
 
 							return {
@@ -708,6 +718,80 @@ export const actionsV2 = (self) => {
 				let cmd = `graphic/${action.options.graphicId}/timer/duration/${stringToMS(t) / 1000}`
 
 				await sendHttpMessage(cmd)
+			},
+		},
+		speakerTimerSetMessage: {
+			name: 'Speaker Timer - Set Message to speaker',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Graphic',
+					id: 'graphicId',
+					choices: [
+						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'utility_speaker_timer').map((c) => {
+							const { id, label } = graphicToReadableLabel(c)
+
+							return {
+								id,
+								label,
+							}
+						}),
+					],
+				},
+				{
+					type: 'textinput',
+					label: 'Message',
+					id: 'body',
+					useVariables: true,
+				},
+			],
+			callback: async (action) => {
+				let b = await self.parseVariablesInString(action.options.body || '')
+
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					speakerMessage: b,
+				}
+				await sendHttpMessage(cmd, body)
+			},
+		},
+		speakerTimerToggleMessage: {
+			name: 'Speaker Timer - Show/Hide message to speaker',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Graphic',
+					id: 'graphicId',
+					choices: [
+						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'utility_speaker_timer').map((c) => {
+							const { id, label } = graphicToReadableLabel(c)
+
+							return {
+								id,
+								label,
+							}
+						}),
+					],
+				},
+				{
+					type: 'dropdown',
+					label: 'Show/Hide',
+					id: 'status',
+					default: 'true',
+					choices: [
+						{ id: true, label: 'Show' },
+						{ id: false, label: 'Hide' },
+					],
+				},
+			],
+			callback: async (action) => {
+				let choice = action.options.status
+
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					showSpeakerMessage: String(choice) === 'true' ? true : false,
+				}
+				await sendHttpMessage(cmd, body)
 			},
 		},
 		updateContentScoreTotal: {
@@ -1048,6 +1132,18 @@ export const actionsV2 = (self) => {
 							id: 'text.3',
 							label: '[text.3]',
 						},
+						{
+							id: 'text.4',
+							label: '[text.4]',
+						},
+						{
+							id: 'text.5',
+							label: '[text.5]',
+						},
+						{
+							id: 'text.6',
+							label: '[text.6]',
+						},
 					],
 				},
 				{
@@ -1156,6 +1252,75 @@ export const actionsV2 = (self) => {
 				}
 
 				sendHttpMessage(cmd)
+			},
+		},
+		setTransitionOverride: {
+			name: 'Set Transition Override',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Graphic',
+					id: 'graphicId',
+					default: SELECTED_PROJECT_GRAPHICS.length > 0 ? SELECTED_PROJECT_GRAPHICS[0].id : '',
+					choices: [
+						...SELECTED_PROJECT_GRAPHICS.map((c) => {
+							const { id, label } = graphicToReadableLabel(c)
+
+							return {
+								id,
+								label,
+							}
+						}),
+					],
+				},
+				{
+					type: 'dropdown',
+					label: 'Next/Previous/Number',
+					id: 'override',
+					default: 'use-theme',
+					choices: [
+						{
+							label: 'Use theme transition (default)',
+							id: 'use-theme',
+						},
+						{
+							label: 'None',
+							id: 'none',
+						},
+						{
+							label: 'Fade',
+							id: 'fade',
+						},
+						{
+							label: 'Slide',
+							id: 'slide',
+						},
+						{
+							label: 'Slide & Fade',
+							id: 'slide_fade',
+						},
+						{
+							label: 'Scale',
+							id: 'scale',
+						},
+						{
+							label: 'Scale & Fade',
+							id: 'scale_fade',
+						},
+						{
+							label: 'Blur & Fade',
+							id: 'blur_fade',
+						},
+					],
+				},
+			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					transition: action.options.override,
+				}
+
+				await sendHttpMessage(cmd, body)
 			},
 		},
 		sendCustonHTTP: {

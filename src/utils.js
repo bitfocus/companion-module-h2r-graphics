@@ -108,6 +108,9 @@ export const graphicToReadableLabel = (graphic) => {
 	} else if (graphic.type === 'video') {
 		label = `${graphic.name} (Video - ${graphic.id})`
 		contents = `${graphic.name}`
+	} else if (graphic.type === 'audio') {
+		label = `${graphic.name} (Audio - ${graphic.id})`
+		contents = `${graphic.name}`
 	} else if (graphic.type === 'celebration') {
 		label = `${graphic.celebrationType} (Celebration - ${graphic.id})`
 		contents = `${graphic.celebrationType}`
@@ -135,6 +138,18 @@ export const graphicToReadableLabel = (graphic) => {
 	} else if (graphic.type === 'utility_speaker_timer') {
 		label = `${msToString(graphic.duration)} (Speaker timer - ${graphic.id})`
 		contents = ['running'].includes(graphic.state) ? `${graphic.endAt}` : `${msToString(graphic.duration)}`
+	} else if (graphic.type === 'time_tod') {
+		label = `Time of day (Time of Day - ${graphic.id})`
+		contents = `Time of day`
+	} else if (graphic.type === 'time_to_tod') {
+		label = `To time of day (To time of Day - ${graphic.id})`
+		contents = `To time of day`
+	} else if (graphic.type === 'time_countdown') {
+		label = `${msToString(graphic.duration)} (Countdown timer - ${graphic.id})`
+		contents = ['running'].includes(graphic.state) ? `${graphic.endAt}` : `${msToString(graphic.duration)}`
+	} else if (graphic.type === 'time_countup') {
+		label = `${msToString(graphic.duration)} (Count Up timer - ${graphic.id})`
+		contents = ['running'].includes(graphic.state) ? `${graphic.endAt}` : `${msToString(graphic.duration)}`
 	} else {
 		label = `${graphic.type} (${graphic.id})`
 		contents = `${graphic.type} (${graphic.id})`
@@ -160,6 +175,10 @@ export const graphicColours = (graphic) => {
 			break
 
 		case 'time':
+		case 'time_countdown':
+		case 'time_countup':
+		case 'time_tod':
+		case 'time_to_tod':
 			bgColour = [248, 113, 113]
 			break
 

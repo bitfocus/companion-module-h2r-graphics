@@ -4,6 +4,13 @@ See HELP.md and LICENSE
 
 ## Changelog
 
+**v3.2.0**
+
+- New: New timer graphics added.
+- New: Set transition override for any graphic.
+- New: Set and show Speaker Timer message.
+- Fix: Lower Third animated Line Two not working as expected.
+
 **v3.1.1**
 
 - Package.json cleanup
