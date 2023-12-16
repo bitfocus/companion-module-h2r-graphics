@@ -16,9 +16,11 @@ const toTimeString = (timeLeft, amount = 'full') => {
 	if (amount == 'mm') return minutes.toString().padStart(2, '0')
 	if (amount == 'ss') return seconds.toString().padStart(2, '0')
 
-	return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds
-		.toString()
-		.padStart(2, '0')}`
+	const hoursString = `${hours<0 ? '-':''}${Math.abs(hours).toString().padStart(2, '0')}`
+	const minutesString = `${Math.abs(minutes).toString().padStart(2, '0')}`
+	const secondsString = `${Math.abs(seconds).toString().padStart(2, '0')}`
+
+	return `${hoursString}:${minutesString}:${secondsString}`
 }
 
 function startStopTimer(self, timerObj) {
