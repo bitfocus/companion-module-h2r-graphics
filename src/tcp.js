@@ -7,10 +7,9 @@ let socket = null
 const intervalIdObj = {}
 
 const toTimeString = (timeLeft, amount = 'full') => {
-	const tl = timeLeft + 500
-	const hours = Math.floor((tl / (1000 * 60 * 60)) % 24) || 0
-	const minutes = Math.floor((tl / (1000 * 60)) % 60) || 0
-	const seconds = Math.floor((tl / 1000) % 60) || 0
+	const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24) || 0
+	const minutes = Math.floor((timeLeft / (1000 * 60)) % 60) || 0
+	const seconds = Math.floor((timeLeft / 1000) % 60) || 0
 
 	if (amount == 'hh') return hours.toString().padStart(2, '0')
 	if (amount == 'mm') return minutes.toString().padStart(2, '0')
