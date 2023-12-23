@@ -31,19 +31,20 @@ function startStopTimer(self, timerObj) {
 
 		if (timeCue.type === 'time_countup' || timeCue.type === 'big_time_countup') {
 			timeLeft = currentTime - timeCue.startedAt
-		} else if (timeCue.type === 'time_countdown' || timeCue.type === 'big_time_countdown') {
-			timeLeft = timeCue.endAt - currentTime
-		} else if (timeCue.type === 'utility_speaker_timer') {
-			timeLeft = timeCue.endAt - currentTime
+		} else if (timeCue.type === 'time_countdown' || timeCue.type === 'big_time_countdown' || timeCue.type === 'utility_speaker_timer') {
+			if(timeCue.state === 'reset'){
+				timeLeft = Number.parseInt(timeCue.duration, 10)
+			}else{
+				timeLeft = timeCue.endAt - currentTime
+			}
 		} else if (timeCue.type === 'time_to_tod' || timeCue.type === 'big_time_to_tod') {
 			let t = new Date(timeCue?.endTime)?.getTime() || 0
 			timeLeft = t - currentTime
 		}
 
-		if (['paused', 'reset'].includes(timerObj.state)) {
+		if (['paused', 'reset'].includes(timeCue.state)) {
 			clearInterval(intervalIdObj[timerKey])
 			delete intervalIdObj[timerKey]
-
 			return self.setVariableValues({
 				[`graphic_${timerKey}_contents`]: `⏸ ${toTimeString(timeLeft)}`,
 				[`graphic_${timerKey}_hh`]: `${toTimeString(timeLeft, 'hh')}`,
@@ -52,7 +53,7 @@ function startStopTimer(self, timerObj) {
 			})
 		}
 
-		self.log('debug', `INTERVAL ${timerObj.id} ${JSON.stringify(timerObj)}`)
+		self.log('debug', `INTERVAL ${timeCue.id} ${JSON.stringify(timeCue)}`)
 		return self.setVariableValues({
 			[`graphic_${timerKey}_contents`]: `${toTimeString(timeLeft)}`,
 			[`graphic_${timerKey}_hh`]: `${toTimeString(timeLeft, 'hh')}`,
