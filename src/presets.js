@@ -54,7 +54,7 @@ export const initPresets = (self) => {
 
 	const createPresetShowHide = (category, item) => {
 		let bgColour = graphicColours(item.type).bgColour
-		let pngIcon = graphicIcons(item.type).png
+		let pngIcon = self.config.usePngForPresets === 'true' ? graphicIcons(item.type).png : null
 		let labelSource = ['lower_third', 'lower_third_animated'].includes(item.type)
 			? self.config.lowerThirdPresetLabelSource || 'contents'
 			: 'contents'
@@ -67,7 +67,7 @@ export const initPresets = (self) => {
 				text: `$(${self.config.label}:graphic_${item.id}_${labelSource})`,
 				png64: pngIcon,
 				pngalignment: 'center:center',
-				size: '18',
+				size: self.config.presetButtonTextSize || '18',
 				color: combineRgb(255, 255, 255),
 				bgcolor: combineRgb(bgColour[0], bgColour[1], bgColour[2]),
 				latch: false,
