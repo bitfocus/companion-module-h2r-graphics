@@ -86,6 +86,31 @@ export const actionsV2 = (self) => {
 				})
 			},
 		},
+		showHideGraphicWithVariable: {
+			name: 'Show/Hide graphic (using Text or Variable)',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Show/Hide',
+					id: 'status',
+					default: 'coming',
+					choices: GRAPHIC_STATUS_TOGGLES,
+				},
+				{
+					type: 'textinput',
+					label: 'Graphic',
+					id: 'graphicId',
+					default: '',
+					useVariables: true,
+				},
+			],
+			callback: async (action) => {
+				const graphicId = await self.parseVariablesInString(action.options.graphicId || '')
+				sendHttpMessage(`graphic/${graphicId}/update`, {
+					status: action.options.status,
+				})
+			},
+		},
 		updateContentLowerThird: {
 			name: 'Update content - Lower third',
 			options: [
