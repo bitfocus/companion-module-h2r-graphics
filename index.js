@@ -52,6 +52,35 @@ class H2RGraphicsInstance extends InstanceBase {
 				width: 3,
 				default: 'ABCD',
 			},
+			{
+				type: 'dropdown',
+				id: 'usePngForPresets',
+				label: 'Show PNG heading on Presets',
+				width: 6,
+				default: 'true',
+				choices: [
+					{ id: 'true', label: 'Yes' },
+					{ id: 'false', label: 'No' },
+				],
+			},
+			{
+				type: 'dropdown',
+				id: 'presetButtonTextSize',
+				label: 'Preset Button Text Size',
+				width: 6,
+				default: '18',
+				allowCustom: true,
+				regex: '/^(?:[0-9]+|auto)$/',
+				choices: [
+					{ id: 'auto', label: 'Auto' },
+					{ id: '7', label: '7pt' },
+					{ id: '14', label: '14pt'},
+					{ id: '18', label: '18pt' },
+					{ id: '24', label: '24pt' },
+					{ id: '30', label: '30pt'},
+					{ id: '33', label: '44pt' },
+				],
+			}		
 		]
 	}
 
