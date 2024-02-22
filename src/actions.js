@@ -603,7 +603,13 @@ export const actionsV2 = (self) => {
 					id: 'graphicId',
 					choices: [
 						...SELECTED_PROJECT_GRAPHICS.filter((c) =>
-							['utility_speaker_timer', 'time_countdown', 'time_countup'].includes(c.type)
+							[
+								'utility_speaker_timer',
+								'time_countdown',
+								'time_countup',
+								'big_time_countdown',
+								'big_time_countup',
+							].includes(c.type)
 						).map((c) => {
 							const { id, label } = graphicToReadableLabel(c)
 
@@ -629,7 +635,13 @@ export const actionsV2 = (self) => {
 					id: 'graphicId',
 					choices: [
 						...SELECTED_PROJECT_GRAPHICS.filter((c) =>
-							['utility_speaker_timer', 'time_countdown', 'time_countup'].includes(c.type)
+							[
+								'utility_speaker_timer',
+								'time_countdown',
+								'time_countup',
+								'big_time_countdown',
+								'big_time_countup',
+							].includes(c.type)
 						).map((c) => {
 							const { id, label } = graphicToReadableLabel(c)
 
@@ -655,7 +667,13 @@ export const actionsV2 = (self) => {
 					id: 'graphicId',
 					choices: [
 						...SELECTED_PROJECT_GRAPHICS.filter((c) =>
-							['utility_speaker_timer', 'time_countdown', 'time_countup'].includes(c.type)
+							[
+								'utility_speaker_timer',
+								'time_countdown',
+								'time_countup',
+								'big_time_countdown',
+								'big_time_countup',
+							].includes(c.type)
 						).map((c) => {
 							const { id, label } = graphicToReadableLabel(c)
 
@@ -681,7 +699,13 @@ export const actionsV2 = (self) => {
 					id: 'graphicId',
 					choices: [
 						...SELECTED_PROJECT_GRAPHICS.filter((c) =>
-							['utility_speaker_timer', 'time_countdown', 'time_countup'].includes(c.type)
+							[
+								'utility_speaker_timer',
+								'time_countdown',
+								'time_countup',
+								'big_time_countdown',
+								'big_time_countup',
+							].includes(c.type)
 						).map((c) => {
 							const { id, label } = graphicToReadableLabel(c)
 

@@ -15,7 +15,7 @@ const toTimeString = (timeLeft, amount = 'full') => {
 	if (amount == 'mm') return minutes.toString().padStart(2, '0')
 	if (amount == 'ss') return seconds.toString().padStart(2, '0')
 
-	const hoursString = `${hours<0 ? '-':''}${Math.abs(hours).toString().padStart(2, '0')}`
+	const hoursString = `${hours < 0 ? '-' : ''}${Math.abs(hours).toString().padStart(2, '0')}`
 	const minutesString = `${Math.abs(minutes).toString().padStart(2, '0')}`
 	const secondsString = `${Math.abs(seconds).toString().padStart(2, '0')}`
 
@@ -31,10 +31,14 @@ function startStopTimer(self, timerObj) {
 
 		if (timeCue.type === 'time_countup' || timeCue.type === 'big_time_countup') {
 			timeLeft = currentTime - timeCue.startedAt
-		} else if (timeCue.type === 'time_countdown' || timeCue.type === 'big_time_countdown' || timeCue.type === 'utility_speaker_timer') {
-			if(timeCue.state === 'reset'){
+		} else if (
+			timeCue.type === 'time_countdown' ||
+			timeCue.type === 'big_time_countdown' ||
+			timeCue.type === 'utility_speaker_timer'
+		) {
+			if (timeCue.state === 'reset') {
 				timeLeft = Number.parseInt(timeCue.duration, 10)
-			}else{
+			} else {
 				timeLeft = timeCue.endAt - currentTime
 			}
 		} else if (timeCue.type === 'time_to_tod' || timeCue.type === 'big_time_to_tod') {

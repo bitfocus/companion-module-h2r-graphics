@@ -74,14 +74,15 @@ class H2RGraphicsInstance extends InstanceBase {
 				choices: [
 					{ id: 'auto', label: 'Auto' },
 					{ id: '7', label: '7pt' },
-					{ id: '14', label: '14pt'},
+					{ id: '14', label: '14pt' },
 					{ id: '18', label: '18pt' },
 					{ id: '24', label: '24pt' },
-					{ id: '30', label: '30pt'},
+					{ id: '30', label: '30pt' },
 					{ id: '33', label: '44pt' },
 				],
 			},
-      {
+			{
+				type: 'dropdown',
 				id: 'lowerThirdPresetLabelSource',
 				label: 'Text Format for Lower Third Preset Buttons',
 				width: 6,

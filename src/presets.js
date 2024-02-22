@@ -58,7 +58,7 @@ export const initPresets = (self) => {
 		let labelSource = ['lower_third', 'lower_third_animated'].includes(item.type)
 			? self.config.lowerThirdPresetLabelSource || 'contents'
 			: 'contents'
-    
+
 		return {
 			category,
 			type: 'button',

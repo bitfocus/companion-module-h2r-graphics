@@ -144,10 +144,10 @@ export const graphicToReadableLabel = (graphic) => {
 	} else if (graphic.type === 'time_to_tod') {
 		label = `To time of day (To time of Day - ${graphic.id})`
 		contents = `To time of day`
-	} else if (graphic.type === 'time_countdown') {
+	} else if (graphic.type === 'time_countdown' || graphic.type === 'big_time_countdown') {
 		label = `${msToString(graphic.duration)} (Countdown timer - ${graphic.id})`
 		contents = ['running'].includes(graphic.state) ? `${graphic.endAt}` : `${msToString(graphic.duration)}`
-	} else if (graphic.type === 'time_countup') {
+	} else if (graphic.type === 'time_countup' || graphic.type === 'big_time_countup') {
 		label = `${msToString(graphic.duration)} (Count Up timer - ${graphic.id})`
 		contents = ['running'].includes(graphic.state) ? `${graphic.endAt}` : `${msToString(graphic.duration)}`
 	} else {
@@ -360,7 +360,7 @@ export const replaceWithDataSource = (text, dynamicText, keepBrakets = false) =>
 
 	array2 = [...array]
 
-	match.forEach((m, i) => {
+	match.forEach((m) => {
 		let m2 = m.replace('[', '')
 		let m3 = m2.replace(']', '')
 
