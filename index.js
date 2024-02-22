@@ -80,7 +80,18 @@ class H2RGraphicsInstance extends InstanceBase {
 					{ id: '30', label: '30pt'},
 					{ id: '33', label: '44pt' },
 				],
-			}		
+			},
+      {
+				id: 'lowerThirdPresetLabelSource',
+				label: 'Text Format for Lower Third Preset Buttons',
+				width: 6,
+				default: 'contents',
+				choices: [
+					{ id: 'contents', label: 'Line 1, Line 2' },
+					{ id: 'first_line', label: 'Line 1' },
+					{ id: 'label', label: 'Label (shows ID if label is empty)' },
+				],
+			},
 		]
 	}
 

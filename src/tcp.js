@@ -124,6 +124,20 @@ export const init_http = (self) => {
 						variableId: `graphic_${id}_contents`,
 						name: label,
 					})
+					variables.push({
+						variableId: `graphic_${id}_label`,
+						name: label,
+					})
+					variableValues[`graphic_${id}_label`] = c.label || id
+
+					if (['lower_third', 'lower_third_animated'].includes(c.type)) {
+						variables.push({
+							variableId: `graphic_${id}_first_line`,
+							name: label,
+						})
+						variableValues[`graphic_${id}_first_line`] = c.line_one
+					}
+
 					if (
 						[
 							'time_countdown',
