@@ -29,23 +29,17 @@ function startStopTimer(self, timerObj) {
 		const currentTime = new Date().getTime()
 		let timeLeft
 
-		if (timeCue.type === 'time_countup' || timeCue.type === 'big_time_countup') {
+		if (['time_countup', 'big_time_countup'].includes(timeCue.type)) {
 			timeLeft = currentTime - timeCue.startedAt
 		} else if (
-			timeCue.type === 'time_countdown' ||
-			timeCue.type === 'big_time_countdown' ||
-			timeCue.type === 'utility_speaker_timer'
+			['time_countdown', 'big_time_countdown', 'utility_speaker_timer'].includes(timeCue.type)
 		) {
 			if (timeCue.state === 'reset') {
 				timeLeft = Number.parseInt(timeCue.duration, 10)
 			} else {
 				timeLeft = timeCue.endAt - currentTime
 			}
-			if (timeCue.onEnd === 'hold') {
-				timeLeft = Math.max(0, timeLeft)
-			}
-			console.log('timeLeft', timeLeft)
-		} else if (timeCue.type === 'time_to_tod' || timeCue.type === 'big_time_to_tod') {
+		} else if (['time_to_tod', 'big_time_to_tod'].includes(timeCue.type)) {
 			let t = new Date(timeCue?.endTime)?.getTime() || 0
 			timeLeft = t - currentTime
 		}
