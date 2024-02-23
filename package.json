@@ -15,11 +15,13 @@
 	},
 	"dependencies": {
 		"@companion-module/base": "^1.7.0",
+		"eslint": "^8.56.0",
 		"got": "^13.0.0",
 		"socket.io-client": "^4.6.0"
 	},
 	"devDependencies": {
-		"@companion-module/tools": "^1.4.2"
+		"@companion-module/tools": "^1.4.2",
+		"eslint-typescript": "^1.1.0"
 	},
 	"prettier": "@companion-module/tools/.prettierrc.json",
 	"type": "module"
