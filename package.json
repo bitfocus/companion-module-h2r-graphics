@@ -15,7 +15,7 @@
 	},
 	"dependencies": {
 		"@companion-module/base": "^1.7.0",
-		"got": "^14.0.0",
+		"got": "^13.0.0",
 		"socket.io-client": "^4.6.0"
 	},
 	"devDependencies": {
