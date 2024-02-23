@@ -1,15 +1,20 @@
 const intervalIdObj = {}
 
 const toTimeString = (timeLeft, amount = 'full') => {
-	const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24) || 0
-	const minutes = Math.floor((timeLeft / (1000 * 60)) % 60) || 0
+	let hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24) || 0
+	let minutes = Math.floor((timeLeft / (1000 * 60)) % 60) || 0
 	const seconds = Math.floor((timeLeft / 1000) % 60) || 0
+
+	if (timeLeft <= 0) {
+		hours++
+		minutes++
+	}
 
 	if (amount == 'hh') return hours.toString().padStart(2, '0')
 	if (amount == 'mm') return minutes.toString().padStart(2, '0')
 	if (amount == 'ss') return seconds.toString().padStart(2, '0')
 
-	const hoursString = `${hours < 0 ? '-' : ''}${Math.abs(hours).toString().padStart(2, '0')}`
+	const hoursString = `${timeLeft < 0 ? '-' : ''}${Math.abs(hours).toString().padStart(2, '0')}`
 	const minutesString = `${Math.abs(minutes).toString().padStart(2, '0')}`
 	const secondsString = `${Math.abs(seconds).toString().padStart(2, '0')}`
 
