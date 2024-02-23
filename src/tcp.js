@@ -26,47 +26,15 @@ function startStopTimer(self, timerObj) {
 	self.log('debug', `ATTEMPTING ${timerObj.id} ${JSON.stringify(timerObj)}`)
 
 	function updateTimerDisplay(timeCue, timerKey) {
-		const currentTime = new Date().getTime()
-		let timeLeft
-
-		if (['time_countup', 'big_time_countup'].includes(timeCue.type)) {
-			timeLeft = currentTime - timeCue.startedAt
-		} else if (
-			['time_countdown', 'big_time_countdown', 'utility_speaker_timer'].includes(timeCue.type)
-		) {
-			if (timeCue.state === 'reset') {
-				timeLeft = Number.parseInt(timeCue.duration, 10)
-			} else {
-				timeLeft = timeCue.endAt - currentTime
-			}
-		} else if (['time_to_tod', 'big_time_to_tod'].includes(timeCue.type)) {
-			let t = new Date(timeCue?.endTime)?.getTime() || 0
-			timeLeft = t - currentTime
-		}
-
-		if (['time_countdown', 'big_time_countdown', 'big_time_to_tod', 'time_tod', 'utility_speaker_timer'].includes(timeCue.type)
-			&& timeCue.onEnd === 'hold') {
-			timeLeft = Math.max(0, timeLeft);
-		}
+		const timeLeft = calculateTimeLeft(timeCue)
 
 		if (['paused', 'reset'].includes(timeCue.state)) {
 			clearInterval(intervalIdObj[timerKey])
 			delete intervalIdObj[timerKey]
-			return self.setVariableValues({
-				[`graphic_${timerKey}_contents`]: `⏸ ${toTimeString(timeLeft)}`,
-				[`graphic_${timerKey}_hh`]: `${toTimeString(timeLeft, 'hh')}`,
-				[`graphic_${timerKey}_mm`]: `${toTimeString(timeLeft, 'mm')}`,
-				[`graphic_${timerKey}_ss`]: `${toTimeString(timeLeft, 'ss')}`,
-			})
 		}
 
 		self.log('debug', `INTERVAL ${timeCue.id} ${JSON.stringify(timeCue)}`)
-		return self.setVariableValues({
-			[`graphic_${timerKey}_contents`]: `${toTimeString(timeLeft)}`,
-			[`graphic_${timerKey}_hh`]: `${toTimeString(timeLeft, 'hh')}`,
-			[`graphic_${timerKey}_mm`]: `${toTimeString(timeLeft, 'mm')}`,
-			[`graphic_${timerKey}_ss`]: `${toTimeString(timeLeft, 'ss')}`,
-		})
+		return setTimerVariables(timerKey, timeLeft)
 	}
 
 	const timerKey = timerObj.id
@@ -79,6 +47,35 @@ function startStopTimer(self, timerObj) {
 	}, 1000)
 
 	return updateTimerDisplay(timerObj, timerKey)
+
+	function setTimerVariables(timerKey, timeLeft) {
+		return self.setVariableValues({
+			[`graphic_${timerKey}_contents`]: `${toTimeString(timeLeft)}`,
+			[`graphic_${timerKey}_hh`]: `${toTimeString(timeLeft, 'hh')}`,
+			[`graphic_${timerKey}_mm`]: `${toTimeString(timeLeft, 'mm')}`,
+			[`graphic_${timerKey}_ss`]: `${toTimeString(timeLeft, 'ss')}`,
+		})
+	}
+
+	function calculateTimeLeft(timeCue) {
+		const currentTime = new Date().getTime()
+		let timeLeft
+
+		if (['time_countup', 'big_time_countup'].includes(timeCue.type)) {
+			timeLeft = currentTime - timeCue.startedAt
+		} else if (['time_countdown', 'big_time_countdown', 'utility_speaker_timer'].includes(timeCue.type)) {
+			timeLeft = timeCue.state === 'reset' ? Number.parseInt(timeCue.duration, 10) : timeCue.endAt - currentTime;
+		} else if (['time_to_tod', 'big_time_to_tod'].includes(timeCue.type)) {
+			const t = new Date(timeCue?.endTime)?.getTime() || 0
+			timeLeft = t - currentTime
+		}
+
+		if (['time_countdown', 'big_time_countdown', 'big_time_to_tod', 'time_tod', 'utility_speaker_timer'].includes(timeCue.type)
+			&& timeCue.onEnd === 'hold') {
+			return Math.max(0, timeLeft);
+		}
+		return timeLeft
+	}
 }
 
 export const init_http = (self) => {
