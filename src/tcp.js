@@ -41,9 +41,18 @@ function startStopTimer(self, timerObj) {
 			} else {
 				timeLeft = timeCue.endAt - currentTime
 			}
+			if (timeCue.onEnd === 'hold') {
+				timeLeft = Math.max(0, timeLeft)
+			}
+			console.log('timeLeft', timeLeft)
 		} else if (timeCue.type === 'time_to_tod' || timeCue.type === 'big_time_to_tod') {
 			let t = new Date(timeCue?.endTime)?.getTime() || 0
 			timeLeft = t - currentTime
+		}
+
+		if (['time_countdown', 'big_time_countdown', 'big_time_to_tod', 'time_tod', 'utility_speaker_timer'].includes(timeCue.type)
+			&& timeCue.onEnd === 'hold') {
+			timeLeft = Math.max(0, timeLeft);
 		}
 
 		if (['paused', 'reset'].includes(timeCue.state)) {
