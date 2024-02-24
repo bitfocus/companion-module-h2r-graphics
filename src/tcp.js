@@ -142,6 +142,26 @@ export const init_http = (self) => {
 						variableValues[`graphic_${id}_first_line`] = c.line_one
 					}
 
+					if(['social'].includes(c.type)) {
+						variables.push({
+							variableId: `graphic_${id}_author`,
+							name: `Social - Author (${id})`,
+						})
+						variableValues[`graphic_${id}_author`] = c.chat.authorDetails.displayName
+
+						variables.push({
+							variableId: `graphic_${id}_author_profile_image_url`,
+							name: `Social - Author Profile Image URL (${id})`,
+						})
+						variableValues[`graphic_${id}_author_profile_image_url`] = c.chat.authorDetails.profileImageUrl
+
+						variables.push({
+							variableId: `graphic_${id}_source`,
+							name: `Social - Source (${id})`,
+						})
+						variableValues[`graphic_${id}_source`] = c.chat.source
+					}
+
 					if (
 						[
 							'time_countdown',
