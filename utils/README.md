@@ -2,7 +2,7 @@
 
 ## Automated H2R Launching on Windows
 
-If you want to automate launching H2R on Windows the `launch_h2r.ahk` script will help.
+If you want to automate launching H2R on Windows the [launch_h2r.ahk](/utils/launch_h2r.ahk) script will help.
 
 - Download AutoHotkey v2 from <https://www.autohotkey.com/download/ahk-v2.exe>
 - install it
