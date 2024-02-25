@@ -4,7 +4,7 @@
 
 If you want to automate launching H2R on Windows the [launch_h2r.ahk](/utils/launch_h2r.ahk) script will help.
 
-- Download AutoHotkey v2 from <https://www.autohotkey.com/download/ahk-v2.exe>
+- Download [AutoHotkey v2](https://www.autohotkey.com) from <https://www.autohotkey.com/download/ahk-v2.exe>
 - install it
 - Copy `launch_h2r.ahk` somewhere that Bitfocus Companion can find it
 - Edit `launch_h2r.ahk` to customise paths and window titles at the top:
