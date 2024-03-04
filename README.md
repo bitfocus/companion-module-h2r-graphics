@@ -4,6 +4,13 @@ See HELP.md and LICENSE
 
 ## Changelog
 
+**v3.3.0**
+
+- New: Show/Hide graphic (using Text or Variable).
+- New: Autohotkey instructions added for automating and launching H2R Graphics.
+- New: Preset updates for Big timers and Image Sequence graphics.
+- Fix: Timer logic refactored.
+
 **v3.2.0**
 
 - New: New timer graphics added.

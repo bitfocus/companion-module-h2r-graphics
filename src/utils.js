@@ -68,7 +68,7 @@ export const graphicToReadableLabel = (graphic) => {
 		label = `${graphic.name} (Image - ${graphic.id})`
 		contents = `${graphic.name}`
 	} else if (graphic.type === 'image_with_message') {
-		label = `${graphic.body} (Image with Mesage - ${graphic.id})`
+		label = `${graphic.body} (Image with Message - ${graphic.id})`
 		contents = `${graphic.body}`
 	} else if (graphic.type === 'ticker') {
 		label = `${graphic.title} (Ticker - ${graphic.id})`
@@ -150,6 +150,9 @@ export const graphicToReadableLabel = (graphic) => {
 	} else if (graphic.type === 'time_countup' || graphic.type === 'big_time_countup') {
 		label = `${msToString(graphic.duration)} (Count Up timer - ${graphic.id})`
 		contents = ['running'].includes(graphic.state) ? `${graphic.endAt}` : `${msToString(graphic.duration)}`
+	} else if (graphic.type === 'image_sequence') {
+		label = `${graphic.body} (Image Sequence - ${graphic.id})`
+		contents = `${graphic.name || 'Image Sequence'}`
 	} else {
 		label = `${graphic.type} (${graphic.id})`
 		contents = `${graphic.type} (${graphic.id})`
@@ -183,6 +186,7 @@ export const graphicColours = (graphic) => {
 			break
 
 		case 'image':
+		case 'image_sequence':
 			bgColour = [37, 99, 235]
 			break
 
@@ -203,6 +207,10 @@ export const graphicColours = (graphic) => {
 			break
 
 		case 'big_time':
+		case 'big_time_countdown':
+		case 'big_time_countup':
+		case 'big_time_tod':
+		case 'big_time_to_tod':
 			bgColour = [248, 113, 113]
 			break
 
