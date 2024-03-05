@@ -142,12 +142,12 @@ export const init_http = (self) => {
 						variableValues[`graphic_${id}_first_line`] = c.line_one
 					}
 
-					if(['social'].includes(c.type)) {
+					if (['social'].includes(c.type)) {
 						variables.push({
-							variableId: `graphic_${id}_author`,
+							variableId: `graphic_${id}_author_display_name`,
 							name: `Social - Author (${id})`,
 						})
-						variableValues[`graphic_${id}_author`] = c.chat.authorDetails.displayName
+						variableValues[`graphic_${id}_author_display_name`] = c.chat.authorDetails.displayName
 
 						variables.push({
 							variableId: `graphic_${id}_author_profile_image_url`,
@@ -160,6 +160,41 @@ export const init_http = (self) => {
 							name: `Social - Source (${id})`,
 						})
 						variableValues[`graphic_${id}_source`] = c.chat.source
+
+						variables.push({
+							variableId: `graphic_${id}_chat_type`,
+							name: `Social - Chat Type (${id})`,
+						})
+
+						variableValues[`graphic_${id}_chat_type`] = c.chat.snippet.type
+
+						variables.push({
+							variableId: `graphic_${id}_chat_id`,
+							name: `Social - Chat ID (${id})`,
+						})
+
+						variableValues[`graphic_${id}_chat_id`] = c.chat.id
+
+						variables.push({
+							variableId: `graphic_${id}_use_custom_image`,
+							name: `Social - Use Custom Image (${id})`,
+						})
+
+						variableValues[`graphic_${id}_use_custom_image`] = c.useCustomImage || false
+
+						variables.push({
+							variableId: `graphic_${id}_custom_image`,
+							name: `Social - Custom Image (${id})`,
+						})
+
+						variableValues[`graphic_${id}_custom_image`] = c.customImage || ''
+
+						variables.push({
+							variableId: `graphic_${id}_celebration`,
+							name: `Social - Celebration (${id})`,
+						})
+
+						variableValues[`graphic_${id}_celebration`] = c.sponsoredCelebration || ''
 					}
 
 					if (
@@ -185,7 +220,7 @@ export const init_http = (self) => {
 							{
 								variableId: `graphic_${id}_ss`,
 								name: `Seconds (${id})`,
-							}
+							},
 						)
 						return startStopTimer(self, c)
 					}
