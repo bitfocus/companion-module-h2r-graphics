@@ -75,7 +75,7 @@ export const graphicToReadableLabel = (graphic) => {
 		contents = `${graphic.title}`
 	} else if (graphic.type === 'social') {
 		label = `Social - ${graphic.id}`
-		contents = `Social`
+		contents = `${graphic.chat.snippet.displayMessage}`
 	} else if (graphic.type === 'webpage') {
 		label = `${graphic.url} (Webpage - ${graphic.id})`
 		contents = `${graphic.url}`
