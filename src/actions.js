@@ -914,6 +914,34 @@ export const actionsV2 = (self) => {
 				sendHttpMessage(cmd)
 			},
 		},
+		clearMapPins: {
+			name: 'Clear pins on the Map graphic',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Graphic',
+					id: 'graphicId',
+					choices: [
+						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'map').map((c) => {
+							const { id, label } = graphicToReadableLabel(c)
+
+							return {
+								id,
+								label,
+							}
+						}),
+					],
+				},
+			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					removePinCount: new Date().getTime(),
+				}
+
+				await sendHttpMessage(cmd, body)
+			},
+		},
 		updateGraphicPosition: {
 			name: 'Update graphic position',
 			options: [

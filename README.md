@@ -4,6 +4,12 @@ See HELP.md and LICENSE
 
 ## Changelog
 
+**v3.4.0**
+
+- New: Social variables added.
+- New: Clear Map pins action.
+- Fix: PNG toggle in config now working as expected.
+
 **v3.3.0**
 
 - New: Show/Hide graphic (using Text or Variable).
