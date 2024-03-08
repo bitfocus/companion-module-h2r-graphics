@@ -160,6 +160,27 @@ export const init_http = (self) => {
 					})
 					variableValues[id] = val
 				})
+
+				const dynamicLists = data.projects[self.config.projectId].dynamicLists || []
+
+				for (let [index, dynamicList] of dynamicLists.entries()) {
+					let selectedValue = null
+
+					for (const element of dynamicList) {
+						const found = element.find((item) => item.value === 'Selected')
+						if (found) {
+							selectedValue = found.selected
+							break
+						}
+					}
+
+					variables.push({
+						variableId: `list${index + 1}_selected_row_number`,
+						name: `Dynamic List ${index + 1} Selected Row Number`,
+					})
+					variableValues[`list${index + 1}_selected_row_number`] = selectedValue
+				}
+
 				self.setVariableDefinitions(variables)
 				self.setVariableValues(variableValues)
 			}
