@@ -65,6 +65,17 @@ class H2RGraphicsInstance extends InstanceBase {
 			},
 			{
 				type: 'dropdown',
+				id: 'useLabelForPresets',
+				label: 'Use graphic label on Presets',
+				width: 6,
+				default: 'false',
+				choices: [
+					{ id: 'true', label: 'Yes' },
+					{ id: 'false', label: 'No' },
+				],
+			},
+			{
+				type: 'dropdown',
 				id: 'presetButtonTextSize',
 				label: 'Preset Button Text Size',
 				width: 6,

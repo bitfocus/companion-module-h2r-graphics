@@ -56,9 +56,14 @@ export const initPresets = (self) => {
 	const createPresetShowHide = (category, item) => {
 		let bgColour = graphicColours(item.type).bgColour
 		let pngIcon = self.config.usePngForPresets === 'true' ? graphicIcons(item.type).png : null
-		let labelSource = ['lower_third', 'lower_third_animated'].includes(item.type)
-			? self.config.lowerThirdPresetLabelSource || 'contents'
-			: 'contents'
+		let labelSource
+		if (self.config.useLabelForPresets === 'true') {
+			labelSource = 'label'
+		} else {
+			labelSource = ['lower_third', 'lower_third_animated'].includes(item.type)
+				? self.config.lowerThirdPresetLabelSource || 'contents'
+				: 'contents'
+		}
 
 		return {
 			category,

@@ -5,9 +5,10 @@ import { graphicToReadableLabel, stringToMS } from './utils.js'
 const GRAPHIC_STATUS_TOGGLES = [
 	{ id: 'coming', label: 'Show' },
 	{ id: 'going', label: 'Hide' },
-	{ id: 'toggle', label: 'Toggle' },
+	{ id: 'toggle', label: 'Toggle on/off air' },
 	{ id: 'cued', label: 'Cue on' },
 	{ id: 'cuedoff', label: 'Cue off' },
+	{ id: 'toggle-cued', label: 'Toggle Cued on/off' },
 ]
 
 const GRAPHIC_POSITION_OPTIONS = [
@@ -1227,13 +1228,18 @@ export const actionsV2 = (self) => {
 					type: 'textinput',
 					label: 'Text',
 					id: 'text',
+					useVariables: true,
 				},
 			],
 			callback: async (action) => {
 				let cmd = `updateVariableText/${action.options.variable}`
 				let body = {
-					text: action.options.text,
+					text: await self.parseVariablesInString(action.options.text || ''),
 				}
+				// const graphicId = await self.parseVariablesInString(action.options.graphicId || '')
+				// sendHttpMessage(`graphic/${graphicId}/update`, {
+				// 	status: action.options.status,
+				// })
 
 				sendHttpMessage(cmd, body)
 			},
