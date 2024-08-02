@@ -69,7 +69,11 @@ export const init_http = (self) => {
 						variableId: `graphic_${id}_first_line`,
 						name: label,
 					})
-					variableValues[`graphic_${id}_first_line`] = c.line_one
+					variableValues[`graphic_${id}_first_line`] = replaceWithDataSource(
+						c.line_one,
+						self.SELECTED_PROJECT_VARIABLES,
+						self.SELECTED_PROJECT_DYNAMIC_LISTS
+					)
 				}
 
 				if (['social'].includes(c.type)) {
