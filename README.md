@@ -13,6 +13,14 @@ See HELP.md and LICENSE
 
 ## Changelog
 
+**v3.5.0**
+
+- New: Use Companion variables when setting `text.x` values.
+- New: Use Companion variables when adding rows to lists.
+- New: Parse `[listX.rowY.cellZ]` variables and show them on Companion buttons.
+- New: Use graphic `labels` on presets (option in settings).
+- New: `Toggle Cue on/off` status change for graphics.
+
 **v3.4.0**
 
 - New: Social variables added.
