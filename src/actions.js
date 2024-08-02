@@ -1260,22 +1260,29 @@ export const actionsV2 = (self) => {
 					type: 'textinput',
 					label: 'Column 1',
 					id: 'colOne',
+					useVariables: true,
 				},
 				{
 					type: 'textinput',
 					label: 'Column 2',
 					id: 'colTwo',
+					useVariables: true,
 				},
 				{
 					type: 'textinput',
 					label: 'Column 3',
 					id: 'colThree',
+					useVariables: true,
 				},
 			],
 			callback: async (action) => {
+				let var1 = await self.parseVariablesInString(action.options.colOne || '')
+				let var2 = await self.parseVariablesInString(action.options.colTwo || '')
+				let var3 = await self.parseVariablesInString(action.options.colThree || '')
+
 				let cmd = `updateVariableList/${action.options.listId}/addRow`
 				let body = {
-					row: [{ value: action.options.colOne }, { value: action.options.colTwo }, { value: action.options.colThree }],
+					row: [{ value: var1 }, { value: var2 }, { value: var3 }],
 				}
 
 				sendHttpMessage(cmd, body)
