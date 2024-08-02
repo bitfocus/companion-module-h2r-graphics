@@ -46,6 +46,7 @@ export const init_http = (self) => {
 			self.SELECTED_PROJECT_MEDIA = data.projects[self.config.projectId].media || []
 			self.SELECTED_PROJECT_THEMES = data.projects[self.config.projectId].themes || {}
 			self.SELECTED_PROJECT_VARIABLES = data.projects[self.config.projectId].dynamicText || {}
+			self.SELECTED_PROJECT_DYNAMIC_LISTS = data.projects[self.config.projectId].dynamicLists || []
 
 			const dynamicText = data.projects[self.config.projectId].dynamicText || {}
 			const variables = []
@@ -149,11 +150,15 @@ export const init_http = (self) => {
 						{
 							variableId: `graphic_${id}_ss`,
 							name: `Seconds (${id})`,
-						},
+						}
 					)
 					return startStopTimer(self, c)
 				}
-				variableValues[`graphic_${id}_contents`] = replaceWithDataSource(contents, self.SELECTED_PROJECT_VARIABLES)
+				variableValues[`graphic_${id}_contents`] = replaceWithDataSource(
+					contents,
+					self.SELECTED_PROJECT_VARIABLES,
+					self.SELECTED_PROJECT_DYNAMIC_LISTS
+				)
 			})
 			Object.entries(dynamicText).map(([id, val]) => {
 				variables.push({

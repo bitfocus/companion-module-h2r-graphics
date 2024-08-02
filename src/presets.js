@@ -5,6 +5,7 @@ export const initPresets = (self) => {
 	const presets = {}
 	let SELECTED_PROJECT_GRAPHICS = self.SELECTED_PROJECT_GRAPHICS || []
 	let SELECTED_PROJECT_VARIABLES = self.SELECTED_PROJECT_VARIABLES || {}
+	let SELECTED_PROJECT_DYNAMIC_LISTS = self.SELECTED_PROJECT_DYNAMIC_LISTS || []
 
 	presets['Run'] = {
 		type: 'button',
@@ -62,7 +63,11 @@ export const initPresets = (self) => {
 		return {
 			category,
 			type: 'button',
-			name: replaceWithDataSource(graphicToReadableLabel(item).label, SELECTED_PROJECT_VARIABLES),
+			name: replaceWithDataSource(
+				graphicToReadableLabel(item).label,
+				SELECTED_PROJECT_VARIABLES,
+				SELECTED_PROJECT_DYNAMIC_LISTS
+			),
 			style: {
 				text: `$(${self.config.label}:graphic_${item.id}_${labelSource})`,
 				png64: pngIcon,

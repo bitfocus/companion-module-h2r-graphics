@@ -358,7 +358,32 @@ export const graphicIcons = (graphic) => {
 	return { png }
 }
 
-export const replaceWithDataSource = (text, dynamicText, keepBrakets = false) => {
+// export const replaceWithDataSource = (text, dynamicText, keepBrakets = false) => {
+// 	const array = text.split(/\[(.*?)\]/g)
+// 	let array2
+// 	const regEx = /\[(.*?)\]/g
+// 	const match = text.match(regEx)
+
+// 	if (!match) return text
+
+// 	array2 = [...array]
+
+// 	match.forEach((m) => {
+// 		let m2 = m.replace('[', '')
+// 		let m3 = m2.replace(']', '')
+
+// 		const index = array.indexOf(m3)
+
+// 		let returnString = dynamicText?.[m3]
+
+// 		array2.splice(index, 1)
+// 		array2.splice(index, 0, !keepBrakets ? returnString : `[${returnString || 'Not set'}]`)
+// 	})
+
+// 	return array2.join('')
+// }
+
+export const replaceWithDataSource = (text = '', dynamicText, dynamicLists, keepBrakets = false) => {
 	const array = text.split(/\[(.*?)\]/g)
 	let array2
 	const regEx = /\[(.*?)\]/g
@@ -371,14 +396,27 @@ export const replaceWithDataSource = (text, dynamicText, keepBrakets = false) =>
 	match.forEach((m) => {
 		let m2 = m.replace('[', '')
 		let m3 = m2.replace(']', '')
+		let pullFromList = false
+		let list = 0
+		let row = 1
+		let cell = 0
 
 		const index = array.indexOf(m3)
 
-		let returnString = dynamicText?.[m3]
+		if (m3.includes('row') && m3.includes('cell')) {
+			pullFromList = true
+			let split = m3.split('.')
+			list = split[0]?.replace('list', '')
+			row = split[1]?.replace('row', '')
+			cell = split[2]?.replace('cell', '')
+		}
+
+		let returnString = pullFromList
+			? dynamicLists?.[parseInt(list) - 1]?.[parseInt(row)]?.[parseInt(cell) - 1]?.value
+			: dynamicText?.[m3]
 
 		array2.splice(index, 1)
 		array2.splice(index, 0, !keepBrakets ? returnString : `[${returnString || 'Not set'}]`)
 	})
-
 	return array2.join('')
 }
