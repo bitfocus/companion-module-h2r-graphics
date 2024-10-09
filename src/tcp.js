@@ -76,6 +76,28 @@ export const init_http = (self) => {
 					)
 				}
 
+				if (['score'].includes(c.type)) {
+					c.scores.forEach((score, sI) => {
+						const scoreGrouped = []
+						score.forEach((level, lI) => {
+							if (lI + 1 > c.levels) return
+							const variableId = `graphic_${id}_team_${sI + 1}_level_${lI + 1}_score`
+							variables.push({
+								variableId,
+								name: `Score - Team ${sI + 1}, Level ${lI + 1}`,
+							})
+							scoreGrouped.push(level.score)
+							variableValues[variableId] = level.score
+						})
+						const variableIdGrouped = `graphic_${id}_team_${sI + 1}_score`
+						variables.push({
+							variableId: variableIdGrouped,
+							name: `Score - Team ${sI + 1}`,
+						})
+						variableValues[variableIdGrouped] = scoreGrouped.join(c.delimiter || '-')
+					})
+				}
+
 				if (['social'].includes(c.type)) {
 					variables.push({
 						variableId: `graphic_${id}_author_display_name`,

@@ -13,6 +13,12 @@ See HELP.md and LICENSE
 
 ## Changelog
 
+**v3.6.0**
+
+- New: Score variables added for each score level and a collective team score.
+- New: Draw on screen presets added.
+- Fix: List "Add row" and "Select row" now accept variables as the list number.
+
 **v3.5.0**
 
 - New: Use Companion variables when setting `text.x` values.

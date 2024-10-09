@@ -1,6 +1,7 @@
 import got from 'got'
 
 import { graphicToReadableLabel, stringToMS } from './utils.js'
+import { splitHex } from '@companion-module/base'
 
 const GRAPHIC_STATUS_TOGGLES = [
 	{ id: 'coming', label: 'Show' },
@@ -9,6 +10,14 @@ const GRAPHIC_STATUS_TOGGLES = [
 	{ id: 'cued', label: 'Cue on' },
 	{ id: 'cuedoff', label: 'Cue off' },
 	{ id: 'toggle-cued', label: 'Toggle Cued on/off' },
+]
+
+const DRAW_BRUSH_SIZES = [
+	{ label: 'Extra small', id: 1 },
+	{ label: 'Small', id: 3 },
+	{ label: 'Medium', id: 6 },
+	{ label: 'Large', id: 8 },
+	{ label: 'Extra large', id: 10 },
 ]
 
 const GRAPHIC_POSITION_OPTIONS = [
@@ -52,6 +61,51 @@ export const actionsV2 = (self) => {
 			options: [],
 			callback: async () => {
 				sendHttpMessage(`clear`)
+			},
+		},
+		draw_on: {
+			name: 'Draw on screen - On',
+			options: [],
+			callback: async () => {
+				sendHttpMessage(`draw/on`)
+			},
+		},
+		draw_off: {
+			name: 'Draw on screen - Off',
+			options: [],
+			callback: async () => {
+				sendHttpMessage(`draw/off`)
+			},
+		},
+		draw_size: {
+			name: 'Draw on screen - Set brush size',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Brush size',
+					id: 'size',
+					default: DRAW_BRUSH_SIZES[3].id,
+					choices: DRAW_BRUSH_SIZES,
+				},
+			],
+			callback: async (action) => {
+				sendHttpMessage(`draw/size/${action.options.size}`)
+			},
+		},
+		draw_color: {
+			name: 'Draw on screen - Set color',
+			options: [
+				{
+					id: 'color',
+					type: 'colorpicker',
+					label: 'Brush color',
+					default: 'rgb(255, 0, 0)',
+				},
+			],
+			callback: async (action) => {
+				const color = splitHex(action.options.color)
+				console.log('COLOUR', color)
+				sendHttpMessage(`draw/color/${color.split('#')[1]}`)
 			},
 		},
 		showHide: {
@@ -1248,13 +1302,11 @@ export const actionsV2 = (self) => {
 			name: 'Variable List - Add item',
 			options: [
 				{
-					type: 'number',
+					type: 'textinput',
 					label: 'List',
 					id: 'listId',
-					default: '1',
-					min: 1,
-					max: 100,
-					step: 1,
+					default: 1,
+					useVariables: true,
 				},
 				{
 					type: 'textinput',
@@ -1280,7 +1332,9 @@ export const actionsV2 = (self) => {
 				let var2 = await self.parseVariablesInString(action.options.colTwo || '')
 				let var3 = await self.parseVariablesInString(action.options.colThree || '')
 
-				let cmd = `updateVariableList/${action.options.listId}/addRow`
+				const listId = await self.parseVariablesInString(action.options.listId || 1)
+
+				let cmd = `updateVariableList/${parseInt(listId)}/addRow`
 				let body = {
 					row: [{ value: var1 }, { value: var2 }, { value: var3 }],
 				}
@@ -1292,13 +1346,11 @@ export const actionsV2 = (self) => {
 			name: 'Variable List - Select row',
 			options: [
 				{
-					type: 'number',
+					type: 'textinput',
 					label: 'List',
 					id: 'listId',
-					default: '1',
-					min: 1,
-					max: 100,
-					step: 1,
+					default: 1,
+					useVariables: true,
 				},
 				{
 					type: 'dropdown',
@@ -1335,10 +1387,11 @@ export const actionsV2 = (self) => {
 			],
 			callback: async (action) => {
 				let cmd
+				const listId = await self.parseVariablesInString(action.options.listId || 1)
 				if (action.options.nextPreviousNumber === 'next' || action.options.nextPreviousNumber === 'previous') {
-					cmd = `updateVariableList/${action.options.listId}/selectRow/${action.options.nextPreviousNumber}`
+					cmd = `updateVariableList/${parseInt(listId)}/selectRow/${action.options.nextPreviousNumber}`
 				} else {
-					cmd = `updateVariableList/${action.options.listId}/selectRow/${action.options.number}`
+					cmd = `updateVariableList/${parseInt(listId)}/selectRow/${action.options.number}`
 				}
 
 				sendHttpMessage(cmd)

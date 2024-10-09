@@ -135,5 +135,96 @@ export const initPresets = (self) => {
 		presets[graphic.id] = preset
 	})
 
+	// DRAW ON SCREEN
+
+	presets['drawing_on'] = {
+		type: 'button',
+		category: 'Draw on screen',
+		name: 'Drawing On',
+		style: {
+			text: 'Drawing On',
+			size: '18',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: 'draw_on',
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [],
+	}
+	presets['drawing_off'] = {
+		type: 'button',
+		category: 'Draw on screen',
+		name: 'Drawing Off',
+		style: {
+			text: 'Drawing Off',
+			size: '18',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: 'draw_off',
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [],
+	}
+	presets['drawing_size'] = {
+		type: 'button',
+		category: 'Draw on screen',
+		name: 'Drawing size',
+		style: {
+			text: 'Drawing size',
+			size: '18',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: 'draw_size',
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [],
+	}
+	presets['drawing_color'] = {
+		type: 'button',
+		category: 'Draw on screen',
+		name: 'Drawing color',
+		style: {
+			text: 'Drawing color',
+			size: '18',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: 'draw_color',
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [],
+	}
+
 	return presets
 }
