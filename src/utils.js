@@ -153,6 +153,9 @@ export const graphicToReadableLabel = (graphic) => {
 	} else if (graphic.type === 'image_sequence') {
 		label = `${graphic.body} (Image Sequence - ${graphic.id})`
 		contents = `${graphic.name || 'Image Sequence'}`
+	} else if (graphic.type === 'custom_html') {
+		label = `${graphic.html?.originalname || 'Custom HTML'} (Custom HTML - ${graphic.id})`
+		contents = `${graphic.html?.originalname || 'Custom HTML'}`
 	} else {
 		label = `${graphic.type} (${graphic.id})`
 		contents = `${graphic.type} (${graphic.id})`

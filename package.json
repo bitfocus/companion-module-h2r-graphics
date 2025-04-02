@@ -14,14 +14,13 @@
 		"url": "git+https://github.com/bitfocus/companion-module-h2r-graphics.git"
 	},
 	"dependencies": {
-		"@companion-module/base": "^1.7.0",
+		"@companion-module/base": "^1.11.3",
 		"got": "^13.0.0",
 		"socket.io-client": "^4.6.0"
 	},
 	"devDependencies": {
-		"@companion-module/tools": "^1.4.2",
-		"eslint": "^8.56.0",
-		"eslint-typescript": "^1.1.0"
+		"@companion-module/tools": "^2.2.2",
+		"eslint": "^9.23.0"
 	},
 	"prettier": "@companion-module/tools/.prettierrc.json",
 	"type": "module"

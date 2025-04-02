@@ -614,6 +614,34 @@ export const actionsV2 = (self) => {
 				await sendHttpMessage(cmd, body)
 			},
 		},
+		refreshWebpage: {
+			name: 'Refresh Webpage',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Graphic',
+					id: 'graphicId',
+					choices: [
+						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'webpage').map((c) => {
+							const { id, label } = graphicToReadableLabel(c)
+
+							return {
+								id,
+								label,
+							}
+						}),
+					],
+				},
+			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					refreshCount: new Date().getTime(),
+				}
+
+				await sendHttpMessage(cmd, body)
+			},
+		},
 		updateContentUtilityLargeText: {
 			name: 'Update content - Large Text (Utility)',
 			options: [
@@ -1373,25 +1401,23 @@ export const actionsV2 = (self) => {
 					],
 				},
 				{
-					type: 'number',
+					type: 'textinput',
 					label: 'Row number',
 					id: 'number',
-					min: 1,
-					max: 1000,
-					default: 1,
-					step: 1,
 					required: true,
 					range: false,
+					useVariables: true,
 					isVisible: (values) => values.nextPreviousNumber === 'number',
 				},
 			],
 			callback: async (action) => {
 				let cmd
 				const listId = await self.parseVariablesInString(action.options.listId || 1)
+				const number = await self.parseVariablesInString(action.options.number || 1)
 				if (action.options.nextPreviousNumber === 'next' || action.options.nextPreviousNumber === 'previous') {
 					cmd = `updateVariableList/${parseInt(listId)}/selectRow/${action.options.nextPreviousNumber}`
 				} else {
-					cmd = `updateVariableList/${parseInt(listId)}/selectRow/${action.options.number}`
+					cmd = `updateVariableList/${parseInt(listId)}/selectRow/${parseInt(number)}`
 				}
 
 				sendHttpMessage(cmd)
@@ -1466,6 +1492,57 @@ export const actionsV2 = (self) => {
 				await sendHttpMessage(cmd, body)
 			},
 		},
+		// updateCustomHtmlTemplate: {
+		// 	name: 'Update content - Custom HTML',
+		// 	options: [
+		// 		{
+		// 			type: 'dropdown',
+		// 			label: 'Graphic',
+		// 			id: 'graphicId',
+		// 			default: SELECTED_PROJECT_GRAPHICS.length > 0 ? SELECTED_PROJECT_GRAPHICS[0].id : '',
+		// 			choices: [
+		// 				...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'custom_html').map((c) => {
+		// 					const { id, label } = graphicToReadableLabel(c)
+
+		// 					return {
+		// 						id,
+		// 						label,
+		// 					}
+		// 				}),
+		// 			],
+		// 		},
+		// 		...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'custom_html' && c.template.properties)
+		// 			.map((c) => {
+		// 				const str = JSON.stringify({ id: c.id })
+		// 				return Object.entries(c.template?.properties).map(([key, _d]) => {
+		// 					return {
+		// 						type: 'textinput',
+		// 						label: _d.label,
+		// 						id: key,
+		// 						tooltip: _d.description,
+		// 						default: c.data?.[key],
+		// 						useVariables: true,
+		// 						isVisibleData: str,
+		// 						isVisible: (values, data) => values['graphicId'] == data.id,
+		// 						// isVisible: function (options) {
+		// 						// 	console.log('IS VISIBLE')
+		// 						// 	self.log('debug', 'IS VISIBLE')
+		// 						// 	return options.effect.includes('brightness')
+		// 						// },
+		// 					}
+		// 				})
+		// 			})
+		// 			.flat(),
+		// 	],
+		// 	callback: async (action) => {
+		// 		let cmd = `graphic/${action.options.graphicId}/update`
+		// 		let body = {
+		// 			transition: action.options.override,
+		// 		}
+
+		// 		await sendHttpMessage(cmd, body)
+		// 	},
+		// },
 		sendCustonHTTP: {
 			name: 'Send custom HTTP',
 			options: [

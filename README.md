@@ -13,6 +13,11 @@ See HELP.md and LICENSE
 
 ## Changelog
 
+**v3.7.0**
+
+- New: Refresh Webpage graphic action.
+- New: Use internal variable in `addVariableSelectRow` action.
+
 **v3.6.0**
 
 - New: Score variables added for each score level and a collective team score.
