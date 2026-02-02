@@ -1,7 +1,7 @@
 import io from 'socket.io-client'
 
 import { graphicToReadableLabel, replaceWithDataSource } from './utils.js'
-import { startStopTimer } from './timer.js'
+import { startStopTimer, startStopVideoAudioTimer } from './timer.js'
 
 let socket = null
 
@@ -74,6 +74,32 @@ export const init_http = (self) => {
 						self.SELECTED_PROJECT_VARIABLES,
 						self.SELECTED_PROJECT_DYNAMIC_LISTS
 					)
+				}
+
+				if (['video', 'audio'].includes(c.type)) {
+					variables.push({
+						variableId: `graphic_${id}_playing`,
+						name: `${label}: Playing status`,
+					})
+					variableValues[`graphic_${id}_playing`] = c.playing
+					variables.push({
+						variableId: `graphic_${id}_remaining`,
+						name: `${label}: Time remaining (HH:MM:SS)`,
+					})
+					variables.push({
+						variableId: `graphic_${id}_hh`,
+						name: `${label}: Time remaining (HH)`,
+					})
+					variables.push({
+						variableId: `graphic_${id}_mm`,
+						name: `${label}: Time remaining (MM)`,
+					})
+					variables.push({
+						variableId: `graphic_${id}_ss`,
+						name: `${label}: Time remaining (SS)`,
+					})
+
+					startStopVideoAudioTimer(self, c)
 				}
 
 				if (['score'].includes(c.type)) {

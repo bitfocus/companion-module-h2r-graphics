@@ -244,6 +244,10 @@ export const actionsV2 = (self) => {
 							id: 'slide-out',
 							label: 'Slide out',
 						},
+						{
+							id: 'stretch',
+							label: 'Stretch',
+						},
 					],
 				},
 				{
@@ -1492,57 +1496,52 @@ export const actionsV2 = (self) => {
 				await sendHttpMessage(cmd, body)
 			},
 		},
-		// updateCustomHtmlTemplate: {
-		// 	name: 'Update content - Custom HTML',
-		// 	options: [
-		// 		{
-		// 			type: 'dropdown',
-		// 			label: 'Graphic',
-		// 			id: 'graphicId',
-		// 			default: SELECTED_PROJECT_GRAPHICS.length > 0 ? SELECTED_PROJECT_GRAPHICS[0].id : '',
-		// 			choices: [
-		// 				...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'custom_html').map((c) => {
-		// 					const { id, label } = graphicToReadableLabel(c)
+		updateCustomHtmlTemplate: {
+			name: 'Update content - Custom HTML',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Graphic',
+					id: 'graphicId',
+					default: SELECTED_PROJECT_GRAPHICS.length > 0 ? SELECTED_PROJECT_GRAPHICS[0].id : '',
+					choices: [
+						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'custom_html').map((c) => {
+							const { id, label } = graphicToReadableLabel(c)
 
-		// 					return {
-		// 						id,
-		// 						label,
-		// 					}
-		// 				}),
-		// 			],
-		// 		},
-		// 		...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'custom_html' && c.template.properties)
-		// 			.map((c) => {
-		// 				const str = JSON.stringify({ id: c.id })
-		// 				return Object.entries(c.template?.properties).map(([key, _d]) => {
-		// 					return {
-		// 						type: 'textinput',
-		// 						label: _d.label,
-		// 						id: key,
-		// 						tooltip: _d.description,
-		// 						default: c.data?.[key],
-		// 						useVariables: true,
-		// 						isVisibleData: str,
-		// 						isVisible: (values, data) => values['graphicId'] == data.id,
-		// 						// isVisible: function (options) {
-		// 						// 	console.log('IS VISIBLE')
-		// 						// 	self.log('debug', 'IS VISIBLE')
-		// 						// 	return options.effect.includes('brightness')
-		// 						// },
-		// 					}
-		// 				})
-		// 			})
-		// 			.flat(),
-		// 	],
-		// 	callback: async (action) => {
-		// 		let cmd = `graphic/${action.options.graphicId}/update`
-		// 		let body = {
-		// 			transition: action.options.override,
-		// 		}
+							return {
+								id,
+								label,
+							}
+						}),
+					],
+				},
+				...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'custom_html' && c.template.properties)
+					.map((c) => {
+						const str = JSON.stringify({ id: c.id })
+						return Object.entries(c.template?.properties).map(([key, _d]) => {
+							return {
+								type: 'textinput',
+								label: _d.label,
+								id: key,
+								tooltip: _d.description,
+								default: c.data?.[key],
+								useVariables: true,
+								isVisibleData: c.id,
+								isVisible: (values, data) => values['graphicId'] == data,
+							}
+						})
+					})
+					.flat(),
+			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					transition: action.options.override,
+				}
 
-		// 		await sendHttpMessage(cmd, body)
-		// 	},
-		// },
+				await sendHttpMessage(cmd, body)
+			},
+		},
 		sendCustonHTTP: {
 			name: 'Send custom HTTP',
 			options: [

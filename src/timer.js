@@ -31,6 +31,12 @@ function calculateTimeLeft(timeCue) {
 	} else if (['time_to_tod', 'big_time_to_tod'].includes(timeCue.type)) {
 		const t = new Date(timeCue?.endTime)?.getTime() || 0
 		timeLeft = t - currentTime
+	} else if (['video', 'audio'].includes(timeCue.type)) {
+		const elapsedSeconds = (Date.now() - timeCue.playedAt) / 1000;
+		const actualCurrentTime = elapsedSeconds;
+		const clampedCurrentTime = Math.min(actualCurrentTime, parseFloat(timeCue.length));
+		const remainingTime = Math.max(0, parseFloat(timeCue.length) - clampedCurrentTime);
+		timeLeft = parseInt(remainingTime * 1000)
 	}
 
 	if (
@@ -45,8 +51,6 @@ function calculateTimeLeft(timeCue) {
 }
 
 export function startStopTimer(instance, timerObj) {
-	instance.log('debug', `ATTEMPTING ${timerObj.id} ${JSON.stringify(timerObj)}`)
-
 	const timerKey = timerObj.id
 
 	if (['paused', 'reset'].includes(timerObj.state)) return updateTimerDisplay(instance, timerObj, timerKey)
@@ -67,13 +71,48 @@ function updateTimerDisplay(instance, timeCue, timerKey) {
 		delete intervalIdObj[timerKey]
 	}
 
-	instance.log('debug', `INTERVAL ${timeCue.id} ${JSON.stringify(timeCue)}`)
 	return setTimerVariables(instance, timerKey, timeLeft)
 }
 
 function setTimerVariables(instance, timerKey, timeLeft) {
 	return instance.setVariableValues({
 		[`graphic_${timerKey}_contents`]: `${toTimeString(timeLeft)}`,
+		[`graphic_${timerKey}_hh`]: `${toTimeString(timeLeft, 'hh')}`,
+		[`graphic_${timerKey}_mm`]: `${toTimeString(timeLeft, 'mm')}`,
+		[`graphic_${timerKey}_ss`]: `${toTimeString(timeLeft, 'ss')}`,
+	})
+}
+
+
+// VIDEO and AUDIO graphics
+
+function updateVideoAudioTimerDisplay(instance, timeCue, timerKey) {
+	const timeLeft = calculateTimeLeft(timeCue)
+
+	if (!timeCue.playing) {
+		clearInterval(intervalIdObj[timerKey])
+		delete intervalIdObj[timerKey]
+	}
+
+	return setVideoAudioVariables(instance, timerKey, timeLeft)
+}
+
+export function startStopVideoAudioTimer(instance, cue) {
+	const timerKey = cue.id
+
+	if (!cue.playing) return updateVideoAudioTimerDisplay(instance, cue, timerKey)
+
+	clearInterval(intervalIdObj[timerKey])
+	intervalIdObj[timerKey] = setInterval(() => {
+		return updateVideoAudioTimerDisplay(instance, cue, timerKey)
+	}, 1000)
+
+	return updateVideoAudioTimerDisplay(instance, cue, timerKey)
+}
+
+function setVideoAudioVariables(instance, timerKey, timeLeft) {
+	return instance.setVariableValues({
+		[`graphic_${timerKey}_remaining`]: `${toTimeString(timeLeft)}`,
 		[`graphic_${timerKey}_hh`]: `${toTimeString(timeLeft, 'hh')}`,
 		[`graphic_${timerKey}_mm`]: `${toTimeString(timeLeft, 'mm')}`,
 		[`graphic_${timerKey}_ss`]: `${toTimeString(timeLeft, 'ss')}`,

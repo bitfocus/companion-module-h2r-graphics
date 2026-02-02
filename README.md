@@ -13,6 +13,11 @@ See HELP.md and LICENSE
 
 ## Changelog
 
+**v3.8.0**
+
+- Fix: Added "Stretch" to Animated Lower Third action.
+- Fix: Add Video and Audio elapsed timing back into the app.
+
 **v3.7.0**
 
 - New: Refresh Webpage graphic action.
