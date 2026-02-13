@@ -13,6 +13,17 @@ See HELP.md and LICENSE
 
 ## Changelog
 
+**v3.9.0**
+
+- New: Google Sheet - Select Row action (next/previous/number).
+- New: Google Sheet - Refresh sheet data action.
+- New: Telestrator - Set tool action.
+- New: Telestrator - Set color action.
+- New: Telestrator - Set brush size action.
+- New: Telestrator - Undo action.
+- New: Telestrator - Delete all action.
+- Fix: Added some missing default graphic names.
+
 **v3.8.0**
 
 - Fix: Added "Stretch" to Animated Lower Third action.

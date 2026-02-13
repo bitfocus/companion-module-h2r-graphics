@@ -36,6 +36,7 @@ export const actionsV2 = (self) => {
 	let SELECTED_PROJECT_GRAPHICS = self.SELECTED_PROJECT_GRAPHICS || []
 	let SELECTED_PROJECT_MEDIA = self.SELECTED_PROJECT_MEDIA || []
 	let SELECTED_PROJECT_THEMES = self.SELECTED_PROJECT_THEMES || {}
+	let SELECTED_PROJECT_GOOGLE_SHEETS = self.SELECTED_PROJECT_GOOGLE_SHEETS || {}
 
 	const sendHttpMessage = async (cmd = '', body = {}) => {
 		var baseUri = `http://${self.config.host}:${self.config.portV2}/api/${self.config.projectId}`
@@ -1539,6 +1540,260 @@ export const actionsV2 = (self) => {
 					transition: action.options.override,
 				}
 
+				await sendHttpMessage(cmd, body)
+			},
+		},
+		googleSheetSelectRow: {
+			name: 'Google Sheet - Select Row',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Sheet',
+					id: 'sheetInternalId',
+					default: Object.keys(SELECTED_PROJECT_GOOGLE_SHEETS).length > 0 ? Object.keys(SELECTED_PROJECT_GOOGLE_SHEETS)[0] : '',
+					choices: Object.entries(SELECTED_PROJECT_GOOGLE_SHEETS).map(([key, sheet]) => ({
+						id: key,
+						label: `${sheet.sheetTab} (${sheet.sheetId})`,
+					})),
+				},
+				{
+					type: 'dropdown',
+					label: 'Next/Previous/Number',
+					id: 'nextPreviousNumber',
+					default: 'next',
+					choices: [
+						{
+							id: 'next',
+							label: 'Next',
+						},
+						{
+							id: 'previous',
+							label: 'Previous',
+						},
+						{
+							id: 'number',
+							label: 'Number',
+						},
+					],
+				},
+				{
+					type: 'textinput',
+					label: 'Row number',
+					id: 'selectedRow',
+					required: true,
+					range: false,
+					useVariables: true,
+					isVisible: (values) => values.nextPreviousNumber === 'number',
+				},
+			],
+			callback: async (action) => {
+				const sheet = SELECTED_PROJECT_GOOGLE_SHEETS[action.options.sheetInternalId]
+				if (!sheet) return
+
+				let selectedRow
+				if (action.options.nextPreviousNumber === 'next' || action.options.nextPreviousNumber === 'previous') {
+					selectedRow = action.options.nextPreviousNumber
+				} else {
+					selectedRow = await self.parseVariablesInString(action.options.selectedRow || '1')
+				}
+				let cmd = `googleSheet/selectRow/${sheet.sheetId}/${sheet.sheetTab}/${selectedRow}`
+				await sendHttpMessage(cmd)
+			},
+		},
+		googleSheetRefresh: {
+			name: 'Google Sheet - Refresh sheet data',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Sheet',
+					id: 'sheetInternalId',
+					default: Object.keys(SELECTED_PROJECT_GOOGLE_SHEETS).length > 0 ? Object.keys(SELECTED_PROJECT_GOOGLE_SHEETS)[0] : '',
+					choices: Object.entries(SELECTED_PROJECT_GOOGLE_SHEETS).map(([key, sheet]) => ({
+						id: key,
+						label: `${sheet.sheetTab} (${sheet.sheetId})`,
+					})),
+				},
+			],
+			callback: async (action) => {
+				const sheet = SELECTED_PROJECT_GOOGLE_SHEETS[action.options.sheetInternalId]
+				if (!sheet) return
+
+				let cmd = `googleSheet/check/${sheet.sheetId}/${sheet.sheetTab}`
+				await sendHttpMessage(cmd)
+			},
+		},
+		telestratorSetTool: {
+			name: 'Telestrator - Set tool',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Graphic',
+					id: 'graphicId',
+					choices: [
+						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'telestrator').map((c) => {
+							const { id, label } = graphicToReadableLabel(c)
+
+							return {
+								id,
+								label,
+							}
+						}),
+					],
+				},
+				{
+					type: 'dropdown',
+					label: 'Tool',
+					id: 'tool',
+					default: 'pen',
+					choices: [
+						{ id: 'pen', label: 'Pen' },
+						{ id: 'highlighter', label: 'Highlighter' },
+						{ id: 'arrow', label: 'Arrow' },
+						{ id: 'circle', label: 'Circle' },
+						{ id: 'rectangle', label: 'Rectangle' },
+						{ id: 'line', label: 'Line' },
+						{ id: 'eraser', label: 'Eraser' },
+					],
+				},
+			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					tool: action.options.tool,
+				}
+				await sendHttpMessage(cmd, body)
+			},
+		},
+		telestratorSetColor: {
+			name: 'Telestrator - Set color',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Graphic',
+					id: 'graphicId',
+					choices: [
+						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'telestrator').map((c) => {
+							const { id, label } = graphicToReadableLabel(c)
+
+							return {
+								id,
+								label,
+							}
+						}),
+					],
+				},
+				{
+					type: 'dropdown',
+					label: 'Color',
+					id: 'color',
+					default: '#ff0000',
+					choices: [
+						{ id: '#ff0000', label: 'Red' },
+						{ id: '#ffff00', label: 'Yellow' },
+						{ id: '#00ff00', label: 'Green' },
+						{ id: '#00bfff', label: 'Light Blue' },
+						{ id: '#0000ff', label: 'Blue' },
+						{ id: '#ff00ff', label: 'Magenta' },
+						{ id: '#ffffff', label: 'White' },
+						{ id: '#000000', label: 'Black' },
+					],
+					allowCustom: true,
+				},
+			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					brushColor: action.options.color,
+				}
+				await sendHttpMessage(cmd, body)
+			},
+		},
+		telestratorSetBrushSize: {
+			name: 'Telestrator - Set brush size',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Graphic',
+					id: 'graphicId',
+					choices: [
+						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'telestrator').map((c) => {
+							const { id, label } = graphicToReadableLabel(c)
+
+							return {
+								id,
+								label,
+							}
+						}),
+					],
+				},
+				{
+					type: 'number',
+					label: 'Brush size (1-20)',
+					id: 'brushSize',
+					min: 1,
+					max: 20,
+					default: 3,
+					step: 1,
+					required: true,
+					range: false,
+				},
+			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					brushSize: action.options.brushSize,
+				}
+				await sendHttpMessage(cmd, body)
+			},
+		},
+		telestratorUndo: {
+			name: 'Telestrator - Undo',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Graphic',
+					id: 'graphicId',
+					choices: [
+						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'telestrator').map((c) => {
+							const { id, label } = graphicToReadableLabel(c)
+
+							return {
+								id,
+								label,
+							}
+						}),
+					],
+				},
+			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/telestrator/undo`
+				await sendHttpMessage(cmd)
+			},
+		},
+		telestratorDelete: {
+			name: 'Telestrator - Delete all',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Graphic',
+					id: 'graphicId',
+					choices: [
+						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'telestrator').map((c) => {
+							const { id, label } = graphicToReadableLabel(c)
+
+							return {
+								id,
+								label,
+							}
+						}),
+					],
+				},
+			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					strokes: [],
+				}
 				await sendHttpMessage(cmd, body)
 			},
 		},

@@ -47,6 +47,7 @@ export const init_http = (self) => {
 			self.SELECTED_PROJECT_THEMES = data.projects[self.config.projectId].themes || {}
 			self.SELECTED_PROJECT_VARIABLES = data.projects[self.config.projectId].dynamicText || {}
 			self.SELECTED_PROJECT_DYNAMIC_LISTS = data.projects[self.config.projectId].dynamicLists || []
+			self.SELECTED_PROJECT_GOOGLE_SHEETS = data.projects[self.config.projectId].sheets || {}
 
 			const dynamicText = data.projects[self.config.projectId].dynamicText || {}
 			const variables = []
