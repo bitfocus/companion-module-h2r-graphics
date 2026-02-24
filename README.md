@@ -22,6 +22,7 @@ See HELP.md and LICENSE
 - New: Telestrator - Set brush size action.
 - New: Telestrator - Undo action.
 - New: Telestrator - Delete all action.
+- New: Progress - Set % complete.
 - Fix: Added some missing default graphic names.
 
 **v3.8.0**

@@ -1811,5 +1811,43 @@ export const actionsV2 = (self) => {
 				sendHttpMessage(cmd)
 			},
 		},
+		progressUpdatePercent: {
+			name: 'Progress - Set % complete',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Graphic',
+					id: 'graphicId',
+					choices: [
+						...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'progress').map((c) => {
+							const { id, label } = graphicToReadableLabel(c)
+
+							return {
+								id,
+								label,
+							}
+						}),
+					],
+				},
+				{
+					type: 'number',
+					label: '% Complete (0-100)',
+					id: 'percent',
+					min: 0,
+					max: 100,
+					default: 0,
+					step: 1,
+					required: true,
+					range: false,
+				},
+			],
+			callback: async (action) => {
+				let cmd = `graphic/${action.options.graphicId}/update`
+				let body = {
+					percent: action.options.percent,
+				}
+				await sendHttpMessage(cmd, body)
+			},
+		},
 	}
 }
