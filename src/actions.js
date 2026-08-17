@@ -1,6 +1,6 @@
 import got from 'got'
 
-import { graphicToReadableLabel, durationToSeconds, durationToString } from './utils.js'
+import { graphicToReadableLabel, durationToSeconds, durationToString, resolveGraphicId } from './utils.js'
 import { splitHex } from '@companion-module/base'
 
 const GRAPHIC_STATUS_TOGGLES = [
@@ -87,8 +87,15 @@ export const actionsV2 = (self) => {
 	const sendHttpMessage = async (cmd = '', body = {}) => {
 		var baseUri = `http://${self.config.host}:${self.config.portV2}/api/${self.config.projectId}`
 
-		self.log('debug', `ATTEMPTING ${baseUri}/${cmd}`)
-		await got.post(`${baseUri}/${cmd}`, {
+		// Graphic commands are addressed as graphic/<id>/..., so resolve that segment here
+		// and every action gets label matching without repeating the lookup 30-odd times.
+		const command = cmd.replace(/^graphic\/([^/]+)/, (_match, graphicId) => {
+			const resolved = resolveGraphicId(decodeURIComponent(graphicId), SELECTED_PROJECT_GRAPHICS)
+			return `graphic/${resolved}`
+		})
+
+		self.log('debug', `ATTEMPTING ${baseUri}/${command}`)
+		await got.post(`${baseUri}/${command}`, {
 			json: {
 				...body,
 			},
@@ -180,6 +187,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 			],
 			callback: async (action) => {
@@ -204,6 +213,7 @@ export const actionsV2 = (self) => {
 					id: 'graphicId',
 					default: '',
 					useVariables: true,
+					tooltip: "A graphic's ID or label. Labels keep this working across projects.",
 				},
 			],
 			callback: async (action) => {
@@ -230,6 +240,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'textinput',
@@ -280,6 +292,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'dropdown',
@@ -348,6 +362,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'textinput',
@@ -383,6 +399,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'dropdown',
@@ -481,6 +499,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'dropdown',
@@ -576,6 +596,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'textinput',
@@ -623,6 +645,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'textinput',
@@ -672,6 +696,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'textinput',
@@ -716,6 +742,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 			],
 			callback: async (action) => {
@@ -744,6 +772,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'textinput',
@@ -787,6 +817,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 			],
 			callback: async (action) => {
@@ -819,6 +851,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 			],
 			callback: async (action) => {
@@ -851,6 +885,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 			],
 			callback: async (action) => {
@@ -883,6 +919,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'textinput',
@@ -927,6 +965,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'textinput',
@@ -967,6 +1007,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'textinput',
@@ -1002,6 +1044,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'dropdown',
@@ -1041,6 +1085,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'dropdown',
@@ -1112,6 +1158,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 			],
 			callback: async (action) => {
@@ -1141,6 +1189,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'dropdown',
@@ -1176,6 +1226,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'number',
@@ -1215,6 +1267,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'number',
@@ -1254,6 +1308,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'number',
@@ -1306,6 +1362,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'number',
@@ -1346,6 +1404,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'dropdown',
@@ -1515,6 +1575,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'dropdown',
@@ -1584,6 +1646,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'custom_html' && c.template?.properties)
 					.map((c) => {
@@ -1603,7 +1667,8 @@ export const actionsV2 = (self) => {
 					.flat(),
 			],
 			callback: async (action) => {
-				const graphic = SELECTED_PROJECT_GRAPHICS.find((c) => c.id === action.options.graphicId)
+				const graphicId = resolveGraphicId(action.options.graphicId, SELECTED_PROJECT_GRAPHICS)
+				const graphic = SELECTED_PROJECT_GRAPHICS.find((c) => c.id === graphicId)
 				const properties = graphic?.template?.properties
 
 				if (!properties) {
@@ -1765,6 +1830,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'dropdown',
@@ -1807,6 +1874,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'dropdown',
@@ -1851,6 +1920,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'number',
@@ -1889,6 +1960,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 			],
 			callback: async (action) => {
@@ -1913,6 +1986,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 			],
 			callback: async (action) => {
@@ -1954,6 +2029,8 @@ export const actionsV2 = (self) => {
 							}
 						}),
 					],
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
 					type: 'number',

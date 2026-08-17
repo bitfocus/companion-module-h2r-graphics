@@ -40,6 +40,22 @@ export const durationToString = (value) => {
 	return msToString(seconds * 1000)
 }
 
+// Resolve whatever the user put in a "Graphic" field to a graphic id. Graphic ids are
+// generated per project, so a button built against one project breaks when the same
+// rundown is rebuilt in another. Matching the user's own label as well means a button
+// survives switching projects as long as the label is kept the same.
+// Falls back to the raw value so ids of graphics missing from the list still work.
+export const resolveGraphicId = (value, graphics = []) => {
+	const raw = String(value ?? '').trim()
+	if (!raw) return raw
+
+	if (graphics.some((c) => c.id === raw)) return raw
+
+	const byLabel = graphics.find((c) => (c.label || '').trim().toLowerCase() === raw.toLowerCase())
+
+	return byLabel ? byLabel.id : raw
+}
+
 export const graphicToReadableLabel = (graphic) => {
 	let id = graphic.id
 	let label

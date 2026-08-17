@@ -1,5 +1,5 @@
 import { combineRgb } from '@companion-module/base'
-import { graphicToReadableLabel } from './utils.js'
+import { graphicToReadableLabel, resolveGraphicId } from './utils.js'
 
 const GRAPHIC_STATUS_OPTIONS = [
 	{ id: 'ready', label: 'Ready' },
@@ -45,10 +45,14 @@ export const initFeedbacks = (self) => {
 						}
 					}),
 				],
+				allowCustom: true,
+				tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 			},
 		],
 		callback: function (feedback) {
-			let status = self.SELECTED_PROJECT_GRAPHICS.find((g) => g.id === feedback?.options?.graphicId)?.status
+			const graphics = self.SELECTED_PROJECT_GRAPHICS || []
+			const graphicId = resolveGraphicId(feedback?.options?.graphicId, graphics)
+			let status = graphics.find((g) => g.id === graphicId)?.status
 			// This callback will be called whenever companion wants to check if this feedback is 'active' and should affect the button style
 			if (status === feedback.options.status) {
 				return true
