@@ -243,14 +243,22 @@ export const actionsV2 = (self) => {
 					id: 'line_two',
 					useVariables: true,
 				},
+				{
+					type: 'textinput',
+					label: 'Line three',
+					id: 'line_three',
+					useVariables: true,
+				},
 			],
 			callback: async (action) => {
 				let l1 = await self.parseVariablesInString(action.options.line_one || '')
 				let l2 = await self.parseVariablesInString(action.options.line_two || '')
+				let l3 = await self.parseVariablesInString(action.options.line_three || '')
 				let cmd = `graphic/${action.options.graphicId}/update`
 				let body = {
 					line_one: l1,
 					line_two: l2,
+					line_three: l3,
 				}
 				await sendHttpMessage(cmd, body)
 			},
@@ -1567,7 +1575,9 @@ export const actionsV2 = (self) => {
 				// Only send the properties belonging to the selected graphic. Every custom HTML
 				// graphic in the project contributes its own options to this action, so
 				// action.options also holds fields from the other graphics.
-				const data = {}
+				// The app merges the update shallowly, so `data` is replaced wholesale - spread
+				// the existing values first to avoid clearing properties left blank here.
+				const data = { ...graphic.data }
 				for (const key of Object.keys(properties)) {
 					const value = action.options[key]
 					if (value === undefined) continue

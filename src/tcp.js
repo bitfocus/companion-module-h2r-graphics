@@ -66,15 +66,24 @@ export const init_http = (self) => {
 				variableValues[`graphic_${id}_label`] = c.label || id
 
 				if (['lower_third', 'lower_third_animated'].includes(c.type)) {
-					variables.push({
-						variableId: `graphic_${id}_first_line`,
-						name: label,
+					// Lower thirds have a third line, animated ones only have two.
+					const lines = [
+						['first_line', c.line_one],
+						['second_line', c.line_two],
+						...(c.type === 'lower_third' ? [['third_line', c.line_three]] : []),
+					]
+
+					lines.forEach(([name, value]) => {
+						variables.push({
+							variableId: `graphic_${id}_${name}`,
+							name: `${label}: ${name.replace('_', ' ')}`,
+						})
+						variableValues[`graphic_${id}_${name}`] = replaceWithDataSource(
+							value || '',
+							self.SELECTED_PROJECT_VARIABLES,
+							self.SELECTED_PROJECT_DYNAMIC_LISTS
+						)
 					})
-					variableValues[`graphic_${id}_first_line`] = replaceWithDataSource(
-						c.line_one,
-						self.SELECTED_PROJECT_VARIABLES,
-						self.SELECTED_PROJECT_DYNAMIC_LISTS
-					)
 				}
 
 				if (['video', 'audio'].includes(c.type)) {

@@ -21,8 +21,9 @@ export const graphicToReadableLabel = (graphic) => {
 	let contents
 
 	if (graphic.type === 'lower_third') {
-		label = `${graphic.line_one}, ${graphic.line_two} (Lower third - ${graphic.id})`
-		contents = `${graphic.line_one}, ${graphic.line_two}`
+		// Lower thirds have an optional third line, so only join the lines in use.
+		contents = [graphic.line_one, graphic.line_two, graphic.line_three].filter(Boolean).join(', ')
+		label = `${contents} (Lower third - ${graphic.id})`
 	} else if (graphic.type === 'message') {
 		label = `${graphic.body} (Message) - ${graphic.id})`
 		contents = `${graphic.body}`
