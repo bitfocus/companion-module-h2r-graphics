@@ -1516,10 +1516,9 @@ export const actionsV2 = (self) => {
 						}),
 					],
 				},
-				...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'custom_html' && c.template.properties)
+				...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'custom_html' && c.template?.properties)
 					.map((c) => {
-						const str = JSON.stringify({ id: c.id })
-						return Object.entries(c.template?.properties).map(([key, _d]) => {
+						return Object.entries(c.template.properties).map(([key, _d]) => {
 							return {
 								type: 'textinput',
 								label: _d.label,
@@ -1535,9 +1534,28 @@ export const actionsV2 = (self) => {
 					.flat(),
 			],
 			callback: async (action) => {
+				const graphic = SELECTED_PROJECT_GRAPHICS.find((c) => c.id === action.options.graphicId)
+				const properties = graphic?.template?.properties
+
+				if (!properties) {
+					self.log('warn', `Custom HTML graphic (${action.options.graphicId}) has no template properties.`)
+					return
+				}
+
+				// Only send the properties belonging to the selected graphic. Every custom HTML
+				// graphic in the project contributes its own options to this action, so
+				// action.options also holds fields from the other graphics.
+				const data = {}
+				for (const key of Object.keys(properties)) {
+					const value = action.options[key]
+					if (value === undefined) continue
+
+					data[key] = await self.parseVariablesInString(value)
+				}
+
 				let cmd = `graphic/${action.options.graphicId}/update`
 				let body = {
-					transition: action.options.override,
+					data,
 				}
 
 				await sendHttpMessage(cmd, body)
