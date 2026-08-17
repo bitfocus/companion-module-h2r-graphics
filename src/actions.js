@@ -1630,6 +1630,10 @@ export const actionsV2 = (self) => {
 							id: 'number',
 							label: 'Number',
 						},
+						{
+							id: 'match',
+							label: 'Match column value',
+						},
 					],
 				},
 				{
@@ -1641,6 +1645,21 @@ export const actionsV2 = (self) => {
 					useVariables: true,
 					isVisible: (values) => values.nextPreviousNumber === 'number',
 				},
+				{
+					type: 'textinput',
+					label: 'Column',
+					id: 'matchColumn',
+					tooltip: 'Column header to search, e.g. the column holding unique IDs. Spaces become underscores.',
+					useVariables: true,
+					isVisible: (values) => values.nextPreviousNumber === 'match',
+				},
+				{
+					type: 'textinput',
+					label: 'Value to match',
+					id: 'matchValue',
+					useVariables: true,
+					isVisible: (values) => values.nextPreviousNumber === 'match',
+				},
 			],
 			callback: async (action) => {
 				const sheet = await resolveGoogleSheet(action.options.sheetInternalId)
@@ -1649,6 +1668,26 @@ export const actionsV2 = (self) => {
 				let selectedRow
 				if (action.options.nextPreviousNumber === 'next' || action.options.nextPreviousNumber === 'previous') {
 					selectedRow = action.options.nextPreviousNumber
+				} else if (action.options.nextPreviousNumber === 'match') {
+					// Find the row ourselves - the app only selects by index, so look the value up
+					// in the sheet data we already hold and send the index it lives at.
+					if (!sheet.data) {
+						return self.log('warn', 'Google Sheet has no data yet. Refresh the sheet before matching a row.')
+					}
+
+					// Headers have their spaces replaced with underscores when the sheet is parsed.
+					const column = (await self.parseVariablesInString(action.options.matchColumn || '')).trim().replace(/\s+/g, '_')
+					const value = (await self.parseVariablesInString(action.options.matchValue || '')).trim()
+
+					if (!column) return self.log('warn', 'Google Sheet - Select Row: no column given to match against.')
+
+					const index = sheet.data.findIndex((row) => String(row?.[column] ?? '').trim() === value)
+
+					if (index === -1) {
+						return self.log('warn', `Google Sheet - Select Row: no row where "${column}" is "${value}".`)
+					}
+
+					selectedRow = index
 				} else {
 					selectedRow = await self.parseVariablesInString(action.options.selectedRow || '1')
 				}
