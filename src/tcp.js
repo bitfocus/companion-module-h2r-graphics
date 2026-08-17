@@ -86,6 +86,25 @@ export const init_http = (self) => {
 					})
 				}
 
+				if (c.type === 'build') {
+					// Each text item's value is stored flat on the cue, keyed by item id,
+					// falling back to the item's default when it hasn't been set.
+					Object.entries(c.items || {})
+						.filter(([, item]) => item?.type === 'STRING')
+						.forEach(([itemId, item]) => {
+							const variableId = `graphic_${id}_${itemId}`
+							variables.push({
+								variableId,
+								name: `${label}: ${item._id || itemId}`,
+							})
+							variableValues[variableId] = replaceWithDataSource(
+								c[itemId] || item.default || '',
+								self.SELECTED_PROJECT_VARIABLES,
+								self.SELECTED_PROJECT_DYNAMIC_LISTS
+							)
+						})
+				}
+
 				if (['video', 'audio'].includes(c.type)) {
 					variables.push({
 						variableId: `graphic_${id}_playing`,

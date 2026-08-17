@@ -56,6 +56,12 @@ export const actionsV2 = (self) => {
 			label: `[${id}]`,
 		}))
 
+	// Build graphics hold their elements in `items`; the text ones are the editable bits.
+	const buildTextItems = (graphic) =>
+		Object.entries(graphic?.items || {}).filter(([, item]) => item?.type === 'STRING')
+
+	const BUILD_GRAPHICS = SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'build')
+
 	const GOOGLE_SHEET_CHOICES = Object.entries(SELECTED_PROJECT_GOOGLE_SHEETS).map(([key, sheet]) => ({
 		id: key,
 		label: `${sheet.sheetTab} (${sheet.sheetId})`,
@@ -1626,6 +1632,60 @@ export const actionsV2 = (self) => {
 				}
 
 				await sendHttpMessage(cmd, body)
+			},
+		},
+		updateBuildText: {
+			name: 'Update content - Build',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Graphic',
+					id: 'graphicId',
+					default: BUILD_GRAPHICS.length > 0 ? BUILD_GRAPHICS[0].id : '',
+					choices: BUILD_GRAPHICS.map((c) => {
+						const { id, label } = graphicToReadableLabel(c)
+
+						return {
+							id,
+							label,
+						}
+					}),
+					allowCustom: true,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
+				},
+				// Every Build graphic contributes its own text items, shown only when that
+				// graphic is selected - the same approach as the Custom HTML action.
+				...BUILD_GRAPHICS.map((c) =>
+					buildTextItems(c).map(([itemId, item]) => ({
+						type: 'textinput',
+						label: item._id || itemId,
+						id: `${c.id}__${itemId}`,
+						default: c[itemId] ?? item.default ?? '',
+						useVariables: true,
+						isVisibleData: c.id,
+						isVisible: (values, data) => values['graphicId'] == data,
+					}))
+				).flat(),
+			],
+			callback: async (action) => {
+				const graphicId = resolveGraphicId(action.options.graphicId, SELECTED_PROJECT_GRAPHICS)
+				const graphic = SELECTED_PROJECT_GRAPHICS.find((c) => c.id === graphicId)
+				const textItems = buildTextItems(graphic)
+
+				if (textItems.length === 0) {
+					return self.log('warn', `Build graphic (${action.options.graphicId}) has no text items.`)
+				}
+
+				// The app stores each text item's value flat on the cue, keyed by item id.
+				const body = {}
+				for (const [itemId] of textItems) {
+					const value = action.options[`${graphic.id}__${itemId}`]
+					if (value === undefined) continue
+
+					body[itemId] = await self.parseVariablesInString(value)
+				}
+
+				await sendHttpMessage(`graphic/${graphic.id}/update`, body)
 			},
 		},
 		updateCustomHtmlTemplate: {
