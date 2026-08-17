@@ -13,6 +13,29 @@ See HELP.md and LICENSE
 
 ## Changelog
 
+**v3.10.0**
+
+- New: Update content - Build action, to set the text items of a Build graphic.
+- New: Update content - Custom HTML now pushes values straight into the graphic's GDD fields.
+- New: Add/Remove graphic from output action, for outputs 1-4 and Utility (set/add/remove/toggle).
+- New: Google Sheet - Select Row can match a row on a column value, not just a row number.
+- New: Google Sheet actions accept a tab name, sheet ID or variable, so the sheet can be chosen at runtime.
+- New: Graphics can be targeted by their label as well as their ID, so buttons survive switching projects.
+- New: Graphic Status feedback accepts variables.
+- New: `graphic_<id>_status` and `graphic_<id>_on_air` variables.
+- New: `graphic_<id>_outputs` variable listing the outputs a graphic appears on.
+- New: `graphic_<id>_second_line` and `graphic_<id>_third_line` variables for Lower Thirds.
+- New: Build graphic text items published as `graphic_<id>_<itemId>` variables.
+- New: Timer actions accept variables, and read HH:MM:SS, MM:SS or a plain number of seconds.
+- Fix: Update content - Custom HTML sent nothing at all, so the fields had no effect.
+- Fix: Add/Remove time - Timer stopped working on newer Companion versions.
+- Fix: Set text variable only offered `[text.1]` to `[text.6]`; it now lists the project's own variables.
+- Fix: Lower Third line three was missing from both the update action and the variables.
+- Fix: `list<n>_selected_row_number` was always blank.
+- Fix: Custom HTML fields with the same name on different graphics overwrote each other.
+- Fix: Graphic dropdowns are now searchable.
+- Fix: Restored linting on ESLint 9.
+
 **v3.9.0**
 
 - New: Google Sheet - Select Row action (next/previous/number).
