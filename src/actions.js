@@ -20,6 +20,17 @@ const DRAW_BRUSH_SIZES = [
 	{ label: 'Extra large', id: 10 },
 ]
 
+// Each cue carries a boolean per output. Output one is on unless explicitly set to
+// false; every other output is off unless explicitly true. Add to this list as the
+// app gains outputs.
+const GRAPHIC_OUTPUTS = [
+	{ id: 'outputOne', label: '1' },
+	{ id: 'outputTwo', label: '2' },
+	{ id: 'outputThree', label: '3' },
+	{ id: 'outputFour', label: '4' },
+	{ id: 'outputUtility', label: 'Utility' },
+]
+
 const GRAPHIC_POSITION_OPTIONS = [
 	{ id: 'tl', label: 'Top Left' },
 	{ id: 'tc', label: 'Top Middle' },
@@ -202,6 +213,73 @@ export const actionsV2 = (self) => {
 				sendHttpMessage(`graphic/${action.options.graphicId}/update`, {
 					status: action.options.status,
 				})
+			},
+		},
+		setGraphicOutputs: {
+			name: 'Add/Remove graphic from output',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Graphic',
+					id: 'graphicId',
+					default: SELECTED_PROJECT_GRAPHICS.length > 0 ? SELECTED_PROJECT_GRAPHICS[0].id : '',
+					choices: [
+						...SELECTED_PROJECT_GRAPHICS.map((c) => {
+							const { id, label } = graphicToReadableLabel(c)
+
+							return {
+								id,
+								label,
+							}
+						}),
+					],
+					allowCustom: true,
+					minChoicesForSearch: 0,
+					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
+				},
+				{
+					type: 'multidropdown',
+					label: 'Outputs',
+					id: 'outputs',
+					default: ['outputOne'],
+					choices: GRAPHIC_OUTPUTS,
+					minChoicesForSearch: 0,
+					tooltip: 'Which outputs this graphic appears on.',
+				},
+				{
+					type: 'dropdown',
+					label: 'Action',
+					id: 'mode',
+					default: 'set',
+					choices: [
+						{ id: 'set', label: 'Set to exactly these outputs' },
+						{ id: 'add', label: 'Add to these outputs' },
+						{ id: 'remove', label: 'Remove from these outputs' },
+						{ id: 'toggle', label: 'Toggle these outputs' },
+					],
+				},
+			],
+			callback: async (action) => {
+				const graphicId = resolveGraphicId(action.options.graphicId, SELECTED_PROJECT_GRAPHICS)
+				const graphic = SELECTED_PROJECT_GRAPHICS.find((c) => c.id === graphicId)
+				const selected = action.options.outputs || []
+				const mode = action.options.mode || 'set'
+
+				// Output one is the only one that defaults to on when unset.
+				const isOn = (outputId) =>
+					graphic?.[outputId] === undefined ? outputId === 'outputOne' : graphic[outputId] === true
+
+				const body = {}
+				for (const { id } of GRAPHIC_OUTPUTS) {
+					const picked = selected.includes(id)
+
+					if (mode === 'set') body[id] = picked
+					else if (picked && mode === 'add') body[id] = true
+					else if (picked && mode === 'remove') body[id] = false
+					else if (picked && mode === 'toggle') body[id] = !isOn(id)
+				}
+
+				await sendHttpMessage(`graphic/${graphicId}/update`, body)
 			},
 		},
 		showHideGraphicWithVariable: {

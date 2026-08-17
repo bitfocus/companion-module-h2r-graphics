@@ -81,6 +81,23 @@ export const init_http = (self) => {
 				})
 				variableValues[`graphic_${id}_on_air`] = ['coming', 'onair', 'going'].includes(c.status)
 
+				// Which outputs this graphic appears on. Output one is on unless explicitly
+				// disabled; the rest are off unless explicitly enabled.
+				variables.push({
+					variableId: `graphic_${id}_outputs`,
+					name: `${label}: Outputs`,
+				})
+				variableValues[`graphic_${id}_outputs`] = [
+					['outputOne', '1'],
+					['outputTwo', '2'],
+					['outputThree', '3'],
+					['outputFour', '4'],
+					['outputUtility', 'U'],
+				]
+					.filter(([key]) => (c[key] === undefined ? key === 'outputOne' : c[key] === true))
+					.map(([, name]) => name)
+					.join(', ')
+
 				if (['lower_third', 'lower_third_animated'].includes(c.type)) {
 					// Lower thirds have a third line, animated ones only have two.
 					const lines = [
