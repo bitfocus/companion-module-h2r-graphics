@@ -194,6 +194,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 			],
@@ -247,6 +248,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -299,6 +301,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -369,6 +372,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -406,6 +410,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -506,6 +511,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -603,6 +609,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -652,6 +659,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -703,6 +711,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -749,6 +758,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 			],
@@ -779,6 +789,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -824,6 +835,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 			],
@@ -858,6 +870,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 			],
@@ -892,6 +905,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 			],
@@ -926,6 +940,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -972,6 +987,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -1014,6 +1030,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -1051,6 +1068,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -1092,6 +1110,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -1165,6 +1184,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 			],
@@ -1196,6 +1216,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -1233,6 +1254,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -1274,6 +1296,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -1315,6 +1338,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -1369,6 +1393,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -1411,6 +1436,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -1582,6 +1608,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -1651,6 +1678,7 @@ export const actionsV2 = (self) => {
 						}
 					}),
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				// Every Build graphic contributes its own text items, shown only when that
@@ -1707,6 +1735,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'custom_html' && c.template?.properties)
@@ -1891,6 +1920,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -1935,6 +1965,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -1981,6 +2012,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{
@@ -2021,6 +2053,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 			],
@@ -2047,6 +2080,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 			],
@@ -2090,6 +2124,7 @@ export const actionsV2 = (self) => {
 						}),
 					],
 					allowCustom: true,
+					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
 				{

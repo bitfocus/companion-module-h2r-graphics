@@ -46,12 +46,22 @@ export const initFeedbacks = (self) => {
 					}),
 				],
 				allowCustom: true,
-				tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
+				useVariables: true,
+				minChoicesForSearch: 0,
+				tooltip: "Pick a graphic, or enter a graphic's ID, label or a variable. Labels keep this working across projects.",
 			},
 		],
-		callback: function (feedback) {
+		// Async so the graphic can be given as a variable. Parsing through the context (rather
+		// than self) is what tells Companion to re-check this feedback when those variables change.
+		callback: async function (feedback, context) {
 			const graphics = self.SELECTED_PROJECT_GRAPHICS || []
-			const graphicId = resolveGraphicId(feedback?.options?.graphicId, graphics)
+
+			let value = feedback?.options?.graphicId
+			if (context?.parseVariablesInString) {
+				value = await context.parseVariablesInString(String(value ?? ''))
+			}
+
+			const graphicId = resolveGraphicId(value, graphics)
 			let status = graphics.find((g) => g.id === graphicId)?.status
 			// This callback will be called whenever companion wants to check if this feedback is 'active' and should affect the button style
 			if (status === feedback.options.status) {
