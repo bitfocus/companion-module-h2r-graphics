@@ -37,6 +37,19 @@ export const actionsV2 = (self) => {
 	let SELECTED_PROJECT_MEDIA = self.SELECTED_PROJECT_MEDIA || []
 	let SELECTED_PROJECT_THEMES = self.SELECTED_PROJECT_THEMES || {}
 	let SELECTED_PROJECT_GOOGLE_SHEETS = self.SELECTED_PROJECT_GOOGLE_SHEETS || {}
+	let SELECTED_PROJECT_VARIABLES = self.SELECTED_PROJECT_VARIABLES || {}
+
+	// Text variables come from the project itself, so the list grows with however many
+	// the user has defined. dynamicText also holds other data sources (lists, sheets etc)
+	// which updateVariableText can't set, so only offer the [text.x] ones.
+	// Sort numerically so [text.10] follows [text.9].
+	const TEXT_VARIABLE_CHOICES = Object.keys(SELECTED_PROJECT_VARIABLES)
+		.filter((id) => /^text\.\d+$/.test(id))
+		.sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }))
+		.map((id) => ({
+			id,
+			label: `[${id}]`,
+		}))
 
 	const sendHttpMessage = async (cmd = '', body = {}) => {
 		var baseUri = `http://${self.config.host}:${self.config.portV2}/api/${self.config.projectId}`
@@ -1283,33 +1296,9 @@ export const actionsV2 = (self) => {
 					type: 'dropdown',
 					label: 'Text variable',
 					id: 'variable',
-					default: 'text.1',
-					choices: [
-						{
-							id: 'text.1',
-							label: '[text.1]',
-						},
-						{
-							id: 'text.2',
-							label: '[text.2]',
-						},
-						{
-							id: 'text.3',
-							label: '[text.3]',
-						},
-						{
-							id: 'text.4',
-							label: '[text.4]',
-						},
-						{
-							id: 'text.5',
-							label: '[text.5]',
-						},
-						{
-							id: 'text.6',
-							label: '[text.6]',
-						},
-					],
+					default: TEXT_VARIABLE_CHOICES.length > 0 ? TEXT_VARIABLE_CHOICES[0].id : 'text.1',
+					choices: TEXT_VARIABLE_CHOICES,
+					allowCustom: true,
 				},
 				{
 					type: 'textinput',
