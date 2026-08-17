@@ -252,21 +252,14 @@ export const init_http = (self) => {
 			const dynamicLists = data.projects[self.config.projectId].dynamicLists || []
 
 			for (let [index, dynamicList] of dynamicLists.entries()) {
-				let selectedValue = null
-
-				for (const element of dynamicList) {
-					const found = element.find((item) => item.value === 'Selected')
-					if (found) {
-						selectedValue = found.selected
-						break
-					}
-				}
+				// The app keeps the selected row number on row 0, cell 0.
+				const selectedValue = dynamicList?.[0]?.[0]?.selected
 
 				variables.push({
 					variableId: `list${index + 1}_selected_row_number`,
 					name: `Dynamic List ${index + 1} Selected Row Number`,
 				})
-				variableValues[`list${index + 1}_selected_row_number`] = selectedValue
+				variableValues[`list${index + 1}_selected_row_number`] = selectedValue ?? ''
 			}
 
 			self.setVariableDefinitions(variables)
