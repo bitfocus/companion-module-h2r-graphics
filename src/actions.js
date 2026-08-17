@@ -58,7 +58,10 @@ export const actionsV2 = (self) => {
 	const DEFAULT_TEXT_VARIABLES = ['text.1', 'text.2', 'text.3', 'text.4', 'text.5', 'text.6']
 
 	const TEXT_VARIABLE_CHOICES = [
-		...new Set([...DEFAULT_TEXT_VARIABLES, ...Object.keys(SELECTED_PROJECT_VARIABLES).filter((id) => /^text\.\d+$/.test(id))]),
+		...new Set([
+			...DEFAULT_TEXT_VARIABLES,
+			...Object.keys(SELECTED_PROJECT_VARIABLES).filter((id) => /^text\.\d+$/.test(id)),
+		]),
 	]
 		// Sort numerically so [text.10] follows [text.9].
 		.sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }))
@@ -68,8 +71,7 @@ export const actionsV2 = (self) => {
 		}))
 
 	// Build graphics hold their elements in `items`; the text ones are the editable bits.
-	const buildTextItems = (graphic) =>
-		Object.entries(graphic?.items || {}).filter(([, item]) => item?.type === 'STRING')
+	const buildTextItems = (graphic) => Object.entries(graphic?.items || {}).filter(([, item]) => item?.type === 'STRING')
 
 	const BUILD_GRAPHICS = SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'build')
 
@@ -88,7 +90,7 @@ export const actionsV2 = (self) => {
 		if (SELECTED_PROJECT_GOOGLE_SHEETS[parsed]) return SELECTED_PROJECT_GOOGLE_SHEETS[parsed]
 
 		const match = Object.values(SELECTED_PROJECT_GOOGLE_SHEETS).find(
-			(sheet) => sheet.sheetTab === parsed || sheet.sheetId === parsed
+			(sheet) => sheet.sheetTab === parsed || sheet.sheetId === parsed,
 		)
 		if (match) return match
 
@@ -902,7 +904,7 @@ export const actionsV2 = (self) => {
 								'time_countup',
 								'big_time_countdown',
 								'big_time_countup',
-							].includes(c.type)
+							].includes(c.type),
 						).map((c) => {
 							const { id, label } = graphicToReadableLabel(c)
 
@@ -937,7 +939,7 @@ export const actionsV2 = (self) => {
 								'time_countup',
 								'big_time_countdown',
 								'big_time_countup',
-							].includes(c.type)
+							].includes(c.type),
 						).map((c) => {
 							const { id, label } = graphicToReadableLabel(c)
 
@@ -972,7 +974,7 @@ export const actionsV2 = (self) => {
 								'time_countup',
 								'big_time_countdown',
 								'big_time_countup',
-							].includes(c.type)
+							].includes(c.type),
 						).map((c) => {
 							const { id, label } = graphicToReadableLabel(c)
 
@@ -1007,7 +1009,7 @@ export const actionsV2 = (self) => {
 								'time_countup',
 								'big_time_countdown',
 								'big_time_countup',
-							].includes(c.type)
+							].includes(c.type),
 						).map((c) => {
 							const { id, label } = graphicToReadableLabel(c)
 
@@ -1054,7 +1056,7 @@ export const actionsV2 = (self) => {
 					id: 'graphicId',
 					choices: [
 						...SELECTED_PROJECT_GRAPHICS.filter((c) =>
-							['utility_speaker_timer', 'time_countdown', 'time_countup'].includes(c.type)
+							['utility_speaker_timer', 'time_countdown', 'time_countup'].includes(c.type),
 						).map((c) => {
 							const { id, label } = graphicToReadableLabel(c)
 
@@ -1770,7 +1772,7 @@ export const actionsV2 = (self) => {
 						useVariables: true,
 						isVisibleData: c.id,
 						isVisible: (values, data) => values['graphicId'] == data,
-					}))
+					})),
 				).flat(),
 			],
 			callback: async (action) => {
@@ -1943,7 +1945,9 @@ export const actionsV2 = (self) => {
 					}
 
 					// Headers have their spaces replaced with underscores when the sheet is parsed.
-					const column = (await self.parseVariablesInString(action.options.matchColumn || '')).trim().replace(/\s+/g, '_')
+					const column = (await self.parseVariablesInString(action.options.matchColumn || ''))
+						.trim()
+						.replace(/\s+/g, '_')
 					const value = (await self.parseVariablesInString(action.options.matchValue || '')).trim()
 
 					if (!column) return self.log('warn', 'Google Sheet - Select Row: no column given to match against.')

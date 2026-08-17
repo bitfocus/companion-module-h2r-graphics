@@ -32,16 +32,16 @@ function calculateTimeLeft(timeCue) {
 		const t = new Date(timeCue?.endTime)?.getTime() || 0
 		timeLeft = t - currentTime
 	} else if (['video', 'audio'].includes(timeCue.type)) {
-		const elapsedSeconds = (Date.now() - timeCue.playedAt) / 1000;
-		const actualCurrentTime = elapsedSeconds;
-		const clampedCurrentTime = Math.min(actualCurrentTime, parseFloat(timeCue.length));
-		const remainingTime = Math.max(0, parseFloat(timeCue.length) - clampedCurrentTime);
+		const elapsedSeconds = (Date.now() - timeCue.playedAt) / 1000
+		const actualCurrentTime = elapsedSeconds
+		const clampedCurrentTime = Math.min(actualCurrentTime, parseFloat(timeCue.length))
+		const remainingTime = Math.max(0, parseFloat(timeCue.length) - clampedCurrentTime)
 		timeLeft = parseInt(remainingTime * 1000)
 	}
 
 	if (
 		['time_countdown', 'big_time_countdown', 'big_time_to_tod', 'time_tod', 'utility_speaker_timer'].includes(
-			timeCue.type
+			timeCue.type,
 		) &&
 		timeCue.onEnd === 'hold'
 	) {
@@ -82,7 +82,6 @@ function setTimerVariables(instance, timerKey, timeLeft) {
 		[`graphic_${timerKey}_ss`]: `${toTimeString(timeLeft, 'ss')}`,
 	})
 }
-
 
 // VIDEO and AUDIO graphics
 

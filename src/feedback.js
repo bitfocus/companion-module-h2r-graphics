@@ -48,7 +48,8 @@ export const initFeedbacks = (self) => {
 				allowCustom: true,
 				useVariables: true,
 				minChoicesForSearch: 0,
-				tooltip: "Pick a graphic, or enter a graphic's ID, label or a variable. Labels keep this working across projects.",
+				tooltip:
+					"Pick a graphic, or enter a graphic's ID, label or a variable. Labels keep this working across projects.",
 			},
 		],
 		// Async so the graphic can be given as a variable. Parsing through the context (rather

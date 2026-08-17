@@ -71,7 +71,7 @@ export const initPresets = (self) => {
 			name: replaceWithDataSource(
 				graphicToReadableLabel(item).label,
 				SELECTED_PROJECT_VARIABLES,
-				SELECTED_PROJECT_DYNAMIC_LISTS
+				SELECTED_PROJECT_DYNAMIC_LISTS,
 			),
 			style: {
 				text: `$(${self.config.label}:graphic_${item.id}_${labelSource})`,

@@ -200,22 +200,22 @@ export const graphicToReadableLabel = (graphic) => {
 		contents = `${graphic.html?.originalname || 'Custom HTML'}`
 	} else if (graphic.type === 'telestrator') {
 		label = `${graphic.name} (Telestrator - ${graphic.id})`
-		contents = `${graphic.name ||'Telestrator'}`
+		contents = `${graphic.name || 'Telestrator'}`
 	} else if (graphic.type === 'build') {
 		label = `${graphic.name} (Build - ${graphic.id})`
-		contents = `${graphic.name ||'Build'}`
+		contents = `${graphic.name || 'Build'}`
 	} else if (graphic.type === 'audience_qanda') {
 		label = `${graphic.name} (Audience Q&A - ${graphic.id})`
-		contents = `${graphic.name ||'Audience Q&A'}`
+		contents = `${graphic.name || 'Audience Q&A'}`
 	} else if (graphic.type === 'slideshow') {
 		label = `${graphic.name} (Slideshow - ${graphic.id})`
-		contents = `${graphic.name ||'Slideshow'}`
+		contents = `${graphic.name || 'Slideshow'}`
 	} else if (graphic.type === 'solid_colour') {
 		label = `${graphic.name} (Solid Colour - ${graphic.id})`
-		contents = `${graphic.name ||'Solid Colour'}`
+		contents = `${graphic.name || 'Solid Colour'}`
 	} else if (graphic.type === 'progress') {
 		label = `${graphic.name} (Progress - ${graphic.id})`
-		contents = `${graphic.name ||'Progress'}`
+		contents = `${graphic.name || 'Progress'}`
 	} else {
 		label = `${graphic.type} (${graphic.id})`
 		contents = `${graphic.type} (${graphic.id})`
