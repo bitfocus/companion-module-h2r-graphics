@@ -1,6 +1,6 @@
 import got from 'got'
 
-import { graphicToReadableLabel, stringToMS } from './utils.js'
+import { graphicToReadableLabel, durationToSeconds, durationToString } from './utils.js'
 import { splitHex } from '@companion-module/base'
 
 const GRAPHIC_STATUS_TOGGLES = [
@@ -413,9 +413,13 @@ export const actionsV2 = (self) => {
 					label: 'Time (HH:MM:SS)',
 					id: 'time',
 					default: '00:01:00',
+					useVariables: true,
+					tooltip: 'HH:MM:SS, MM:SS, or a number of seconds. Accepts variables.',
 				},
 			],
 			callback: async (action) => {
+				const time = await self.parseVariablesInString(String(action.options.time ?? ''))
+
 				let cmd = `graphic/${action.options.graphicId}/update`
 				let body = {}
 				let d = new Date()
@@ -423,24 +427,36 @@ export const actionsV2 = (self) => {
 					body = {
 						timerType: action.options.type,
 					}
-				} else if (action.options.type === 'to_time_of_day') {
+
+					return sendHttpMessage(cmd, body)
+				}
+
+				// The app stores duration as an HH:MM:SS string next to durationMS, so
+				// normalise whatever was entered before sending it.
+				const duration = durationToString(time)
+				if (duration === null) {
+					return self.log('warn', `Update content - Time: "${time}" is not a valid time.`)
+				}
+				const durationMS = durationToSeconds(time) * 1000
+
+				if (action.options.type === 'to_time_of_day') {
 					body = {
 						timerType: action.options.type,
-						endTime: action.options.time,
-						timeLeft: stringToMS(action.options.time) - d.getMilliseconds(),
+						endTime: duration,
+						timeLeft: durationMS - d.getMilliseconds(),
 					}
 				} else if (action.options.type === 'countdown') {
 					body = {
 						timerType: action.options.type,
-						duration: action.options.time,
-						durationMS: stringToMS(action.options.time),
-						timeLeft: stringToMS(action.options.time),
+						duration,
+						durationMS,
+						timeLeft: durationMS,
 					}
 				} else if (action.options.type === 'countup') {
 					body = {
 						timerType: action.options.type,
-						duration: action.options.time,
-						durationMS: stringToMS(action.options.time),
+						duration,
+						durationMS,
 						timeLeft: 0,
 					}
 				}
@@ -507,25 +523,35 @@ export const actionsV2 = (self) => {
 					label: 'Time (HH:MM:SS)',
 					id: 'time',
 					default: '00:01:00',
+					useVariables: true,
+					tooltip: 'HH:MM:SS, MM:SS, or a number of seconds. Accepts variables.',
 				},
 			],
 			callback: async (action) => {
+				const time = await self.parseVariablesInString(String(action.options.time ?? ''))
+
+				const duration = durationToString(time)
+				if (duration === null) {
+					return self.log('warn', `Update content - Big Timer: "${time}" is not a valid time.`)
+				}
+				const durationMS = durationToSeconds(time) * 1000
+
 				let cmd = `graphic/${action.options.graphicId}/update`
 				let body = {}
 				if (action.options.type === 'countdown') {
 					body = {
 						shape: action.options.shape,
 						timerType: action.options.type,
-						duration: action.options.time,
-						durationMS: stringToMS(action.options.time),
-						timeLeft: stringToMS(action.options.time),
+						duration,
+						durationMS,
+						timeLeft: durationMS,
 					}
 				} else if (action.options.type === 'countup') {
 					body = {
 						shape: action.options.shape,
 						timerType: action.options.type,
-						duration: action.options.time,
-						durationMS: stringToMS(action.options.time),
+						duration,
+						durationMS,
 						timeLeft: 0,
 					}
 				}
@@ -908,12 +934,18 @@ export const actionsV2 = (self) => {
 					id: 'time',
 					default: '00:01:00',
 					useVariables: true,
+					tooltip: 'HH:MM:SS, MM:SS, or a number of seconds. Accepts variables.',
 				},
 			],
 			callback: async (action) => {
 				let t = await self.parseVariablesInString(String(action.options.time ?? '00:00:00'))
 
-				let cmd = `graphic/${action.options.graphicId}/timer/duration/${stringToMS(t) / 1000}`
+				const seconds = durationToSeconds(t)
+				if (seconds === null) {
+					return self.log('warn', `Set duration - Timer: "${t}" is not a valid duration.`)
+				}
+
+				let cmd = `graphic/${action.options.graphicId}/timer/duration/${seconds}`
 
 				await sendHttpMessage(cmd)
 			},

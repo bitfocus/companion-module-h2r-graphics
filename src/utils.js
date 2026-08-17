@@ -15,6 +15,31 @@ export const stringToMS = (string = '00:00:00') => {
 	return (parseInt(h) * 60 * 60 + parseInt(m) * 60 + parseInt(s)) * 1000
 }
 
+// Turn a user (or variable) supplied duration into seconds, returning null if it
+// can't be read. Accepts HH:MM:SS, MM:SS and a plain number of seconds, so a
+// variable holding something like "90" works as well as "00:01:30".
+export const durationToSeconds = (value) => {
+	const string = String(value ?? '').trim()
+	if (!string) return null
+
+	const parts = string.split(':').map((p) => p.trim())
+	if (parts.some((p) => p === '' || !/^\d+$/.test(p))) return null
+
+	// A bare number is seconds; otherwise the last part is always seconds.
+	const [h, m, s] = parts.length === 3 ? parts : parts.length === 2 ? ['0', ...parts] : ['0', '0', parts[0]]
+
+	return parseInt(h, 10) * 3600 + parseInt(m, 10) * 60 + parseInt(s, 10)
+}
+
+// Normalise a user (or variable) supplied duration to the HH:MM:SS string the app
+// stores alongside durationMS. Returns null if the value can't be read.
+export const durationToString = (value) => {
+	const seconds = durationToSeconds(value)
+	if (seconds === null) return null
+
+	return msToString(seconds * 1000)
+}
+
 export const graphicToReadableLabel = (graphic) => {
 	let id = graphic.id
 	let label
