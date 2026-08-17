@@ -42,9 +42,14 @@ export const actionsV2 = (self) => {
 	// Text variables come from the project itself, so the list grows with however many
 	// the user has defined. dynamicText also holds other data sources (lists, sheets etc)
 	// which updateVariableText can't set, so only offer the [text.x] ones.
-	// Sort numerically so [text.10] follows [text.9].
-	const TEXT_VARIABLE_CHOICES = Object.keys(SELECTED_PROJECT_VARIABLES)
-		.filter((id) => /^text\.\d+$/.test(id))
+	// [text.1] to [text.6] are always listed, so they stay selectable before the module
+	// has connected or when the project hasn't reported them yet.
+	const DEFAULT_TEXT_VARIABLES = ['text.1', 'text.2', 'text.3', 'text.4', 'text.5', 'text.6']
+
+	const TEXT_VARIABLE_CHOICES = [
+		...new Set([...DEFAULT_TEXT_VARIABLES, ...Object.keys(SELECTED_PROJECT_VARIABLES).filter((id) => /^text\.\d+$/.test(id))]),
+	]
+		// Sort numerically so [text.10] follows [text.9].
 		.sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }))
 		.map((id) => ({
 			id,
@@ -1324,7 +1329,7 @@ export const actionsV2 = (self) => {
 					type: 'dropdown',
 					label: 'Text variable',
 					id: 'variable',
-					default: TEXT_VARIABLE_CHOICES.length > 0 ? TEXT_VARIABLE_CHOICES[0].id : 'text.1',
+					default: DEFAULT_TEXT_VARIABLES[0],
 					choices: TEXT_VARIABLE_CHOICES,
 					allowCustom: true,
 				},
