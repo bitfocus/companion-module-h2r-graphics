@@ -859,19 +859,25 @@ export const actionsV2 = (self) => {
 					],
 				},
 				{
-					type: 'number',
+					type: 'textinput',
 					label: 'Amount in seconds (+/-)',
 					id: 'amount',
-					default: 10,
-					step: 1,
+					default: '10',
 					required: true,
-					range: false,
+					useVariables: true,
 				},
 			],
 			callback: async (action) => {
-				let t = await self.parseVariablesInString(action.options.amount || 0)
+				// parseVariablesInString expects a string, and older versions of this action
+				// stored `amount` as a number, so coerce before parsing.
+				let t = await self.parseVariablesInString(String(action.options.amount ?? '0'))
 
-				let cmd = `graphic/${action.options.graphicId}/timer/jump/${t}`
+				const seconds = parseInt(t, 10)
+				if (isNaN(seconds)) {
+					return self.log('warn', `Add/Remove time: "${t}" is not a valid number of seconds.`)
+				}
+
+				let cmd = `graphic/${action.options.graphicId}/timer/jump/${seconds}`
 
 				await sendHttpMessage(cmd)
 			},
@@ -901,10 +907,11 @@ export const actionsV2 = (self) => {
 					label: 'Time (HH:MM:SS)',
 					id: 'time',
 					default: '00:01:00',
+					useVariables: true,
 				},
 			],
 			callback: async (action) => {
-				let t = await self.parseVariablesInString(action.options.time || 0)
+				let t = await self.parseVariablesInString(String(action.options.time ?? '00:00:00'))
 
 				let cmd = `graphic/${action.options.graphicId}/timer/duration/${stringToMS(t) / 1000}`
 
