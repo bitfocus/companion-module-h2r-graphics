@@ -1738,15 +1738,19 @@ export const actionsV2 = (self) => {
 					minChoicesForSearch: 0,
 					tooltip: "Pick a graphic, or enter a graphic's label to keep this working across projects.",
 				},
+				// Option ids are namespaced per graphic. Property names come from each
+				// template's GDD, so two graphics can easily share one (e.g. "_text"), and
+				// Companion keeps a single flat value per option id - without the prefix
+				// they'd overwrite each other.
 				...SELECTED_PROJECT_GRAPHICS.filter((c) => c.type === 'custom_html' && c.template?.properties)
 					.map((c) => {
 						return Object.entries(c.template.properties).map(([key, _d]) => {
 							return {
 								type: 'textinput',
-								label: _d.label,
-								id: key,
+								label: _d.label || key,
+								id: `${c.id}__${key}`,
 								tooltip: _d.description,
-								default: c.data?.[key],
+								default: c.data?.[key] ?? _d.default,
 								useVariables: true,
 								isVisibleData: c.id,
 								isVisible: (values, data) => values['graphicId'] == data,
@@ -1765,20 +1769,19 @@ export const actionsV2 = (self) => {
 					return
 				}
 
-				// Only send the properties belonging to the selected graphic. Every custom HTML
-				// graphic in the project contributes its own options to this action, so
-				// action.options also holds fields from the other graphics.
+				// Only send the properties belonging to the selected graphic - every custom HTML
+				// graphic contributes its own namespaced options to this action.
 				// The app merges the update shallowly, so `data` is replaced wholesale - spread
 				// the existing values first to avoid clearing properties left blank here.
 				const data = { ...graphic.data }
 				for (const key of Object.keys(properties)) {
-					const value = action.options[key]
+					const value = action.options[`${graphic.id}__${key}`]
 					if (value === undefined) continue
 
 					data[key] = await self.parseVariablesInString(value)
 				}
 
-				let cmd = `graphic/${action.options.graphicId}/update`
+				let cmd = `graphic/${graphic.id}/update`
 				let body = {
 					data,
 				}
