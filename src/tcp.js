@@ -65,6 +65,22 @@ export const init_http = (self) => {
 				})
 				variableValues[`graphic_${id}_label`] = c.label || id
 
+				// Status lets a button react to a graphic going on and off air, which matters
+				// for graphics with an onAirDuration that hide themselves after a few seconds.
+				variables.push({
+					variableId: `graphic_${id}_status`,
+					name: `${label}: Status`,
+				})
+				variableValues[`graphic_${id}_status`] = c.status || 'offair'
+
+				// A plain on air/off air flag, easier to test on a button than the raw status.
+				// "coming" and "going" are transitions, so count as on air.
+				variables.push({
+					variableId: `graphic_${id}_on_air`,
+					name: `${label}: On air`,
+				})
+				variableValues[`graphic_${id}_on_air`] = ['coming', 'onair', 'going'].includes(c.status)
+
 				if (['lower_third', 'lower_third_animated'].includes(c.type)) {
 					// Lower thirds have a third line, animated ones only have two.
 					const lines = [
