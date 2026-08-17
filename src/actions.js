@@ -51,6 +51,34 @@ export const actionsV2 = (self) => {
 			label: `[${id}]`,
 		}))
 
+	const GOOGLE_SHEET_CHOICES = Object.entries(SELECTED_PROJECT_GOOGLE_SHEETS).map(([key, sheet]) => ({
+		id: key,
+		label: `${sheet.sheetTab} (${sheet.sheetId})`,
+	}))
+
+	// The sheet dropdowns allow custom values so a sheet can be picked at runtime. A typed
+	// value may contain variables, and can reference the sheet by its internal id, its tab
+	// name or its sheet id - the internal ids aren't meaningful to users writing expressions.
+	const resolveGoogleSheet = async (value) => {
+		if (SELECTED_PROJECT_GOOGLE_SHEETS[value]) return SELECTED_PROJECT_GOOGLE_SHEETS[value]
+
+		const parsed = (await self.parseVariablesInString(value || '')).trim()
+		if (SELECTED_PROJECT_GOOGLE_SHEETS[parsed]) return SELECTED_PROJECT_GOOGLE_SHEETS[parsed]
+
+		const match = Object.values(SELECTED_PROJECT_GOOGLE_SHEETS).find(
+			(sheet) => sheet.sheetTab === parsed || sheet.sheetId === parsed
+		)
+		if (match) return match
+
+		// Fall back to treating the value as "sheetId/sheetTab" so sheets that aren't in the
+		// project list yet can still be targeted.
+		const [sheetId, ...tabParts] = parsed.split('/')
+		if (sheetId && tabParts.length > 0) return { sheetId, sheetTab: tabParts.join('/') }
+
+		self.log('warn', `Google Sheet "${parsed}" not found in project.`)
+		return null
+	}
+
 	const sendHttpMessage = async (cmd = '', body = {}) => {
 		var baseUri = `http://${self.config.host}:${self.config.portV2}/api/${self.config.projectId}`
 
@@ -1557,11 +1585,10 @@ export const actionsV2 = (self) => {
 					type: 'dropdown',
 					label: 'Sheet',
 					id: 'sheetInternalId',
-					default: Object.keys(SELECTED_PROJECT_GOOGLE_SHEETS).length > 0 ? Object.keys(SELECTED_PROJECT_GOOGLE_SHEETS)[0] : '',
-					choices: Object.entries(SELECTED_PROJECT_GOOGLE_SHEETS).map(([key, sheet]) => ({
-						id: key,
-						label: `${sheet.sheetTab} (${sheet.sheetId})`,
-					})),
+					default: GOOGLE_SHEET_CHOICES.length > 0 ? GOOGLE_SHEET_CHOICES[0].id : '',
+					choices: GOOGLE_SHEET_CHOICES,
+					allowCustom: true,
+					tooltip: 'Pick a sheet, or enter a tab name, sheet ID or variable to select one at runtime.',
 				},
 				{
 					type: 'dropdown',
@@ -1594,7 +1621,7 @@ export const actionsV2 = (self) => {
 				},
 			],
 			callback: async (action) => {
-				const sheet = SELECTED_PROJECT_GOOGLE_SHEETS[action.options.sheetInternalId]
+				const sheet = await resolveGoogleSheet(action.options.sheetInternalId)
 				if (!sheet) return
 
 				let selectedRow
@@ -1614,15 +1641,14 @@ export const actionsV2 = (self) => {
 					type: 'dropdown',
 					label: 'Sheet',
 					id: 'sheetInternalId',
-					default: Object.keys(SELECTED_PROJECT_GOOGLE_SHEETS).length > 0 ? Object.keys(SELECTED_PROJECT_GOOGLE_SHEETS)[0] : '',
-					choices: Object.entries(SELECTED_PROJECT_GOOGLE_SHEETS).map(([key, sheet]) => ({
-						id: key,
-						label: `${sheet.sheetTab} (${sheet.sheetId})`,
-					})),
+					default: GOOGLE_SHEET_CHOICES.length > 0 ? GOOGLE_SHEET_CHOICES[0].id : '',
+					choices: GOOGLE_SHEET_CHOICES,
+					allowCustom: true,
+					tooltip: 'Pick a sheet, or enter a tab name, sheet ID or variable to select one at runtime.',
 				},
 			],
 			callback: async (action) => {
-				const sheet = SELECTED_PROJECT_GOOGLE_SHEETS[action.options.sheetInternalId]
+				const sheet = await resolveGoogleSheet(action.options.sheetInternalId)
 				if (!sheet) return
 
 				let cmd = `googleSheet/check/${sheet.sheetId}/${sheet.sheetTab}`
