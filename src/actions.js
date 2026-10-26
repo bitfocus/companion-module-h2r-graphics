@@ -114,11 +114,17 @@ export const actionsV2 = (self) => {
 		})
 
 		self.log('debug', `ATTEMPTING ${baseUri}/${command}`)
-		await got.post(`${baseUri}/${command}`, {
-			json: {
-				...body,
-			},
-		})
+		// Many callbacks don't await this, so a thrown error (404 for an unknown graphic,
+		// H2R closed, wrong project ID) would be an unhandled rejection and crash the module.
+		try {
+			await got.post(`${baseUri}/${command}`, {
+				json: {
+					...body,
+				},
+			})
+		} catch (e) {
+			self.log('warn', `H2R ${command} failed: ${e.response?.statusCode ?? ''} ${e.message}`)
+		}
 	}
 
 	return {

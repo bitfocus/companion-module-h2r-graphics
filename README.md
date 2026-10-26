@@ -13,6 +13,11 @@ See HELP.md and LICENSE
 
 ## Changelog
 
+**v3.10.1**
+
+- Fix: An action that failed (an unknown graphic label, H2R closed, or a wrong Project ID) crashed and restarted the connection; it now logs a warning instead.
+- Fix: Project ID is validated as four uppercase letters in the connection settings.
+
 **v3.10.0**
 
 - New: Update content - Build action, to set the text items of a Build graphic.

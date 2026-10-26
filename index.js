@@ -51,6 +51,8 @@ class H2RGraphicsInstance extends InstanceBase {
 				label: 'Project ID',
 				width: 3,
 				default: 'ABCD',
+				regex: '/^[A-Z]{4}$/',
+				tooltip: 'Four uppercase letters, shown in the H2R Graphics launcher',
 			},
 			{
 				type: 'dropdown',
