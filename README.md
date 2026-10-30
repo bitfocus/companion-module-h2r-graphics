@@ -13,6 +13,11 @@ See HELP.md and LICENSE
 
 ## Changelog
 
+**v3.10.2**
+
+- Fix: The connection got stuck on "Initializing" and never connected to H2R Graphics, caused by a build tooling change in v3.10.1.
+- Change: Runs on Node 22, removing the "unsupported node18 runtime" warning in Companion 5.2.
+
 **v3.10.1**
 
 - Fix: An action that failed (an unknown graphic label, H2R closed, or a wrong Project ID) crashed and restarted the connection; it now logs a warning instead.
